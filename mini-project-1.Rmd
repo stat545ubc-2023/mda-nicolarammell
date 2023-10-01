@@ -86,7 +86,10 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: *vancouver_trees* 2: *flow_sample* 3: *building_permits* 4: *cancer_sample*
+1: vancouver_trees 
+2: flow_sample 
+3: building_permits 
+4: cancer_sample
 
 <!----------------------------------------------------------------------------->
 
