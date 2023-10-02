@@ -86,10 +86,7 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: vancouver_trees 
-2: flow_sample 
-3: building_permits 
-4: cancer_sample
+1: vancouver_trees 2: flow_sample 3: building_permits 4: cancer_sample
 
 <!----------------------------------------------------------------------------->
 
@@ -105,32 +102,35 @@ dplyr::glimpse(vancouver_trees) # dataset has 20 columns (variables) and 146,611
                                 # most columns contain character data (chr)
 class(vancouver_trees)          # dataset is a tibble (tbl_df)
 ```
+
 ```{r}
 ### Explore flow_sample ###
 dplyr::glimpse(flow_sample) # dataset has 7 columns (variables) and 218 rows
                             # most columns contain numeric data (dbl)
 class(flow_sample)          # dataset is a tibble (tbl_df)
 ```
+
 ```{r}
 ### Explore building_permits ###
 dplyr::glimpse(building_permits) # dataset has 14 columns (variables) and 20,680 rows
                                  # most columns contain character data (chr)
 class(building_permits)          # dataset is a tibble (spec_tbl_df)
 ```
+
 ```{r}
 ### Explore cancer_sample ###
 dplyr::glimpse(cancer_sample) # dataset has 32 columns (variables) and 569 rows
                               # most columns contain numeric data (dbl)
 class(cancer_sample)          # dataset is a tibble (spec_tbl_df)
 ```
+
 <!----------------------------------------------------------------------------->
 
 1.3 **(1 point)** Now that you've explored the 4 datasets that you were initially most interested in, let's narrow it down to 1. What lead you to choose this one? Briefly explain your choice below.
 
 <!-------------------------- Start your work below ---------------------------->
 
-I have decided to use the `vancouver_trees` dataset for my project. Of the four datasets
-that I explored, this dataset had the most observations, with 146,611 rows of data. This dataset also contains numerous variables of interest, with a mixture of character data (such as species names and street names) and numeric data (such as tree diameter). Overall, I chose this dataset because of its large size, completeness, and because I am ultimately interested in learning more about the trees of Vancouver. Specifically, I am interested in how tree biodiversity and species identity varies over space. 
+I have decided to use the `vancouver_trees` dataset for my project. Of the four datasets that I explored, this dataset had the most observations, with 146,611 rows of data. This dataset also contains numerous variables of interest, with a mixture of character data (such as species names and street names) and numeric data (such as tree diameter). Overall, I chose this dataset because of its large size, completeness, and because I am ultimately interested in learning more about the trees of Vancouver. Specifically, I am interested in how tree biodiversity and species identity varies over space.
 
 <!----------------------------------------------------------------------------->
 
@@ -138,7 +138,7 @@ that I explored, this dataset had the most observations, with 146,611 rows of da
 
 <!-------------------------- Start your work below ---------------------------->
 
-What are the most common and rare tree species of Vancouver? What proportion of Vancouver tree species are native to the region?
+What are the most common and rare tree species of Vancouver? Do tree communities differ by neighborhood?
 
 <!----------------------------------------------------------------------------->
 
@@ -169,6 +169,75 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 
 <!-------------------------- Start your work below ---------------------------->
 
+## Introduction
+
+For Task 2, I will complete Exercises 3, 2, 1, and 4.
+
+### Load libraries and data
+
+```{r}
+# Load libraries 
+library(devtools)                                # package development tools
+# devtools::install_github("UBC-MDS/datateachr") # install datateachr from GitHub
+library(datateachr)                              # package containing our dataset
+library(ggplot2)                                 # package for data visualization
+library(tidyverse)                               # set of packages for tidy data
+
+# Load and explore dataset
+trees <- datateachr::vancouver_trees
+dplyr::glimpse(trees)
+summary(trees)
+```
+
+### Exercise #3: Investigate how many missing values there are per variable. Can you find a way to plot this?
+
+Explanation: (why am I doing this?)
+
+```{r}
+# How many NAs per variable? Can you plot this?
+summary(trees)
+
+```
+
+Summary: (what did I find out?)
+
+### Exercise #2: Create a new variable based on other variables in your data.
+
+Explanation: (why am I doing this?)
+
+```{r}
+# Create new columns: year planted, no. years since planted
+
+```
+
+Summary: (what did I find out?)
+
+### Exercise #1: Plot the distribution of a numeric variable. 
+
+Explanation: (why am I doing this?)
+
+```{r}
+# Plot distribution of no. years since planted (all species)
+# Plot distribution of tree species (count vs species - combine spp and genus)
+
+```
+
+Summary: (what did I find out?)
+
+### Exercise #4: Explore the relationship between 2 variables in a plot. 
+
+Explanation: (why am I doing this?)
+
+```{r}
+# diameter vs years since planted
+
+
+```
+
+Summary: (what did I find out?)
+
+
+
 <!----------------------------------------------------------------------------->
 
 # Task 3: Choose research questions
@@ -176,6 +245,11 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 **(4 points)** So far, you have chosen a dataset and gotten familiar with it through exploring the data. You have also brainstormed one research question that interested you (Task 1.4). Now it's time to pick 4 research questions that you would like to explore in Milestone 2! Write the 4 questions and any additional comments below.
 
 <!--- *****START HERE***** --->
+
+1. What are the most rare and most common tree species in Vancouver, BC?
+2. Do tree communities differ by neighbourhood?
+3. How does species richness vary by neighboorhood?
+4. Have the species identity of planted trees changed over time?
 
 <!----------------------------->
 
