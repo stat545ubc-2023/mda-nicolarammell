@@ -300,8 +300,10 @@ trees2 %>%
    summary() # values range from 2 to 48 
 ```
 
+Finally, let's make the density plot for trunk diameter of *Betula* species.
+
 ```{r}
-# Finally, let's make the density plot for trunk diameter of Betula species 
+# Create density (ridgeline) plot for Betula using ggridges 
 trees2 %>% 
    filter(genus_name == "BETULA") %>% 
    ggplot(aes(colour = common_name, 
