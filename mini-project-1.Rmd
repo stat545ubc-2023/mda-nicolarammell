@@ -236,6 +236,15 @@ ggplot(na, aes(x = variable_name, y = proportion_na)) +
 
 **Summary**: Plotting the proportion of NA values for each variable is an effective way to visualize how much data is missing from this dataset. Many variables do not have any missing values, while `plant area` has little missing data (\~1%), `latitude` and `longitude` have an intermediate amount of missing data (\~15%), and `date planted` and `cultivar name` have a substantial amount of missing data (\~50%). If we plan on using the latter two variables for an analysis, we'd need to be cautious since so much data is missing.
 
+**Note**: Beyond using the `is.na` argument, further quality control should be done while assessing missing values from the dataset. For example, in my initial viewing of `summary(trees)` when reading in the data (as seen above), I noticed that the `diameter` variable ranges from 0.00 to 435.00. Let's take a closer look using the `dplyr::count` function. 
+
+```{r}
+# Count number of unique diameter values
+trees %>%
+  count(diameter) 
+```
+While most observations have a realistic diameter value, some do not. In fact, for 92 trees, a diameter of 0 was recorded. And, there are some instances of unreasonably large diameters, such as the maximum recorded diameter of 435.00 inches. Since these values appear to be measurement or data entry errors, and not NAs, I will leave Exercise 3 as-is. However, this observation is important in considering how the data should be filtered for validity before future analyses. 
+
 ## Exercise 2: Create a new variable based on other variables in your data.
 
 **Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year planted`. I will create this variable based on the `date planted` variable, by splitting up the date into multiple columns.
@@ -297,8 +306,9 @@ I am interested in exploring tree diameter for *Betula* (aka Birch), a genus whi
 trees2 %>% 
    dplyr::filter(genus_name == "BETULA") %>% 
    dplyr::select(diameter) %>%
-   summary() # values range from 2 to 48 
+   summary() # values range from 2 to 48 inches (DBH); values seem legitimate 
 ```
+Note that units were not provided in the dataset, but are found in the [metadata](metadata at https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. Diameter is measured as diameter at breast height (DBH): diameter in inches at a height of 1.3 meters. 
 
 Finally, let's make the density plot for trunk diameter of *Betula* species.
 
@@ -315,7 +325,7 @@ trees2 %>%
    xlim(0, 50) +            # define x-axis as 0 to 50, based on the known range
    theme_classic() +
    theme(legend.position = "none") +
-   xlab("Diameter") + ylab("Common name")
+   xlab("Diameter at breast height (inches)") + ylab("Common name")
 ```
 
 **Summary**: The Exercise 8 plot shows kernel density estimates of diameter for different species in the *Betula* genus. According to the plot, species such as River Birch (*Betula nigra*) and Gray Birch (*Betula populifolia*) had large diameters at the time of planting, whereas species such as Young's Weeping Birch (*Betula pendula*) and While Himalayan Birch (*Betula jacquemontii*) had small diameters at the time of planting.
