@@ -1,6 +1,7 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
-output: html_document
+author: Nicola Rammell
+output: github_document
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
@@ -8,8 +9,6 @@ output: html_document
 And hopefully the first of many. Let's get started:
 
 1.  Install the [`datateachr`](https://github.com/UBC-MDS/datateachr) package by typing the following into your **R terminal**:
-
-<!-- -->
 
 ```         
 install.packages("devtools")
@@ -108,14 +107,18 @@ dplyr::glimpse(vancouver_trees) # dataset has 20 columns (variables) and 146,611
 class(vancouver_trees)          # dataset is a tibble (tbl_df)
 ```
 
+The `vancouver_trees` dataset is a tibble with 20 columns and 146,611 rows. Most columns contain character data.
+
 ## Explore flow_sample
 
 ```{r}
 ### Use dplyr::glimpse to explore flow_sample ###
 dplyr::glimpse(flow_sample) # dataset has 7 columns (variables) and 218 rows
                             # most columns contain numeric data (dbl)
-class(flow_sample)           # dataset is a tibble (tbl_df)
+class(flow_sample)          # dataset is a tibble (tbl_df)
 ```
+
+The `flow_sample` dataset is a tibble with 7 columns and 218 rows. Most columns contain numeric data.
 
 ## Explore building_permits
 
@@ -126,6 +129,8 @@ dplyr::glimpse(building_permits) # dataset has 14 columns (variables) and 20,680
 class(building_permits)          # dataset is a tibble (spec_tbl_df)
 ```
 
+The `building_permits` dataset is a tibble with 14 columns and 20,680 rows. Most columns contain character data.
+
 ## Explore cancer_sample
 
 ```{r}
@@ -135,13 +140,15 @@ dplyr::glimpse(cancer_sample) # dataset has 32 columns (variables) and 569 rows
 class(cancer_sample)          # dataset is a tibble (spec_tbl_df)
 ```
 
+The `cancer_sample` dataset is a tibble with 32 columns and 569 rows. Most columns contain numeric data.
+
 <!----------------------------------------------------------------------------->
 
 1.3 **(1 point)** Now that you've explored the 4 datasets that you were initially most interested in, let's narrow it down to 1. What lead you to choose this one? Briefly explain your choice below.
 
 <!-------------------------- Start your work below ---------------------------->
 
-I have decided to use the `vancouver_trees` dataset for my project. Of the four datasets that I explored, this dataset had the most observations, with 146,611 rows of data. This dataset also contains numerous variables of interest, with a mixture of character data (such as species names and street names) and numeric data (such as tree diameter). Overall, I chose this dataset because of its large size, completeness, and because I am ultimately interested in learning more about the trees of Vancouver. Specifically, I am interested in how tree biodiversity and species identity varies over space.
+I have decided to use the `vancouver_trees` dataset for my project. Of the four datasets that I explored, this dataset had the most observations, with 146,611 rows of data. This dataset also contains numerous variables of interest, with a mixture of character data (such as species names and street names) and numeric data (such as tree diameter). Overall, I chose this dataset because of its large size, relative completeness, and because I am ultimately interested in learning more about the trees of Vancouver. Specifically, I am interested in how tree biodiversity and species identity vary over space and time.
 
 <!----------------------------------------------------------------------------->
 
@@ -182,7 +189,7 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 
 ## Introduction
 
-For Task 2, I will complete Exercises 3, 2, 1, and 8. These are completed out of order because I decided to assess missing data first, create a new variable second, plot the distribution of this variable third, and lastly, create a density plot of another variable. All exercises are completed with the `vancouver_trees` dataset from the `datateachr` package using dplyr and ggplot2. 
+For Task 2, I will complete Exercises 3, 2, 1, and 8. These are completed out of order because I decided to assess missing data first, create a new variable second, plot the distribution of this variable third, and lastly, create a density plot of another variable. All exercises are completed with the `vancouver_trees` dataset from the `datateachr` package using dplyr and ggplot2.
 
 ### Load libraries and data
 
@@ -196,7 +203,7 @@ library(ggplot2)                                 # package for data visualizatio
 library(ggridges)                                # package for ridgeline plots
 
 # Load and view dataset
-trees <- datateachr::vancouver_trees             # create object for our tibble
+trees <- datateachr::vancouver_trees             # create object for the dataset
 dplyr::glimpse(trees)                            # explore tibble characteristics
 summary(trees)                                   # see variable characteristics/NAs
 View(trees)                                      # see complete tibble in new window
@@ -204,7 +211,7 @@ View(trees)                                      # see complete tibble in new wi
 
 ## Exercise 3: Investigate how many missing values there are per variable. Can you find a way to plot this?
 
-Explanation: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA data in order to visualize how much of the data is missing.
+Explanation: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing.
 
 ```{r}
 ### Count number of NAs for each variable and calculate proportion of missing data ###
@@ -250,18 +257,22 @@ Explanation: I am interested in plotting the distribution of `year planted`. I h
 
 ```{r}
 ### Check that year_planted is a numeric variable ###
-dplyr::glimpse(trees2) # using dplyr::glimpse, I see that is it (dbl)
-str(trees2)            # alternatively, could check using str (num)
-```
-```{r}
-### Plot the distribution of year_planted using a histogram ###
-ggplot(trees, aes(year_planted)) +
-   geom_histogram(aes(y = after_stat(count)), fill = "tan") +
-   theme_classic() +
-   xlab("Year") + ylab("Number of trees planted") # note warning: "removed 76548 rows" = NAs
+dplyr::glimpse(trees2)   # using dplyr::glimpse, I see that is it (dbl)
+# str(trees2)            # alternatively, could check using str (num)
 ```
 
-Summary: The above plot shows the distribution of the variable `year planted`. We can see that from the beginning of the dataset in 1989, the number of trees that were planted in a given year increased over time. The number of trees planted seems to peak around 1995, after which the number of trees planted plateaus until the early 2010s, after which point the number of trees planted in a given year declines.
+```{r}
+### Plot the distribution of year_planted using a histogram ###
+ggplot(trees2, aes(year_planted)) +
+   geom_histogram(aes(y = after_stat(count)),  # number of points in bin
+                  fill = "springgreen4", 
+                  bins = 30,                   # the number of bins
+                  na.rm = TRUE) +              # removing the 76548 rows with NAs
+   theme_classic() +
+   xlab("Year") + ylab("Number of trees planted") 
+```
+
+Summary: The above plot shows the distribution of the variable `year planted`. We can see that from the beginning of the dataset in 1989, the number of trees that were planted in a given year initially increased over time. The number of trees planted seems to peak in the mid-late 1990s, after which the number of trees planted plateaus until the early 2010s, after which point the number of trees planted in a given year declines.
 
 ## Exercise 8: Use a density plot to explore any of your variables (that are suitable for this type of plot).
 
@@ -269,13 +280,13 @@ Explanation: Finally, I am interested in exploring tree `diameter` of tree speci
 
 ```{r}
 ### First, let's confirm how many observations per species there are ###
-trees %>%
+trees2 %>%
   count(common_name) # there are 634 species in this dataset 
 ```
 
 ```{r}
-### Next, let's check how many observations per genus there are ###
-trees %>%
+### Next, let's confirm how many observations per genus there are ###
+trees2 %>%
   count(genus_name) # there are 97 genera in this dataset
 ```
 
@@ -283,15 +294,15 @@ I am interested in exploring tree diameter for Betula (aka Birch), a genus which
 
 ```{r}
 ### What is the range of trunk diameters for Betula species? ###
-trees %>% 
-   filter(genus_name == "BETULA") %>% 
-   select(diameter) %>%
+trees2 %>% 
+   dplyr::filter(genus_name == "BETULA") %>% 
+   dplyr::select(diameter) %>%
    summary() # values range from 2 to 48 
 ```
 
 ```{r}
-### Finally, let's make the density plot for the trunk diameter of Betula species ###
-trees %>% 
+### Finally, let's make the density plot for trunk diameter of Betula species ###
+trees2 %>% 
    filter(genus_name == "BETULA") %>% 
    ggplot(aes(colour = common_name, 
               fill = common_name, 
@@ -305,7 +316,7 @@ trees %>%
    xlab("Diameter") + ylab("Common name")
 ```
 
-Summary: This Exercise 8 plot shows kernel density estimates of diameter for different species in the Betula genus. According to the plot, species such as River Birch (Betula nigra) and Gray Birch (Betula populifolia) had large diameters at the time of planting, whereas species such as Young's Weeping Birch (Betula pendula) and While Himalayan Birch (Betula jacquemontii) had small diameters at the time of planting. 
+Summary: The Exercise 8 plot shows kernel density estimates of diameter for different species in the Betula genus. According to the plot, species such as River Birch (*Betula nigra*) and Gray Birch (*Betula populifolia*) had large diameters at the time of planting, whereas species such as Young's Weeping Birch (*Betula pendula*) and While Himalayan Birch (*Betula jacquemontii*) had small diameters at the time of planting.
 
 <!----------------------------------------------------------------------------->
 
@@ -315,10 +326,10 @@ Summary: This Exercise 8 plot shows kernel density estimates of diameter for dif
 
 <!--- *****START HERE***** --->
 
-1. What is the distribution of common and rare tree species in Vancouver, BC?  
-2. Does tree community composition differ by neighborhood?  
-3. How does tree species richness vary by neighborhood?  
-4. Have the species identity of planted trees changed over time?
+1.  What is the distribution of common and rare tree species in Vancouver, BC?\
+2.  Does tree community composition differ by neighborhood?\
+3.  How does tree species richness vary by neighborhood?\
+4.  Have the species identity of planted trees changed over time?
 
 <!----------------------------->
 
