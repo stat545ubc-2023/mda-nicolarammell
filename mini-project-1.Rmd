@@ -203,7 +203,9 @@ library(datateachr)                              # package containing the datase
 library(tidyverse)                               # set of packages for tidy data
 library(ggplot2)                                 # package for data visualization
 library(ggridges)                                # package for ridgeline plots
+```
 
+```{r}
 # Load and view dataset
 trees <- datateachr::vancouver_trees             # create object for the dataset
 dplyr::glimpse(trees)                            # explore tibble characteristics
@@ -227,7 +229,7 @@ na <- trees %>%
 print(na)
 ```
 
-```{r}
+```{r fig-1-bar}
 # Next, I will plot the proportion of missing data for each variable 
 ggplot(na, aes(x = variable_name, y = proportion_na)) +     
  geom_bar(stat = "identity", fill = "aquamarine3") +
@@ -272,7 +274,7 @@ dplyr::glimpse(trees2)   # using dplyr::glimpse, I see that is it (dbl)
 # str(trees2)            # alternatively, could check using str (num)
 ```
 
-```{r}
+```{r fig-2-histogram}
 # Plot the distribution of year_planted using a histogram 
 ggplot(trees2, aes(year_planted)) +
    geom_histogram(aes(y = after_stat(count)),  # number of points in bin
@@ -310,11 +312,11 @@ trees2 %>%
    dplyr::select(diameter) %>%
    summary() # values range from 2 to 48 inches (DBH); values seem legitimate 
 ```
-Note that units were not provided in the dataset, but are found in the [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. Diameter is measured as diameter at breast height (DBH): diameter in inches at a height of 1.3 meters. 
+Note that units were not provided in the dataset itself, but are found in the [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. Diameter is measured as diameter at breast height (DBH): diameter in inches at a height of 1.3 meters. 
 
 Finally, let's make the density plot for trunk diameter of *Betula* species. 
 
-```{r}
+```{r fig-3-ridgeline}
 # Create density (ridgeline) plot for Betula using ggridges 
 trees2 %>% 
    filter(genus_name == "BETULA") %>% 
