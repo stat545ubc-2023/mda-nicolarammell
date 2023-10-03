@@ -1,7 +1,9 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
-author: Nicola Rammell
-output: github_document
+author: "Nicola Rammell"
+output:
+  github_document:
+    toc: true
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
