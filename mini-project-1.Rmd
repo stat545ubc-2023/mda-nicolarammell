@@ -103,31 +103,37 @@ And that is exactly the first thing that you will do!
 ## Explore vancouver_trees
 
 ```{r}
-# Use dplyr::glimpse to explore vancouver_trees 
+# Use dplyr::glimpse to explore 3 attributes 
 dplyr::glimpse(vancouver_trees) # dataset has 20 columns (variables) and 146,611 rows
                                 # most columns contain character data (chr)
+
+# Use base::class to confirm class
 class(vancouver_trees)          # dataset is a tibble (tbl_df)
 ```
 
-The `vancouver_trees` dataset is a tibble with 20 columns and 146,611 rows. Most columns contain character data.
+The `vancouver_trees` dataset is a tibble with 20 columns and 146,611 rows. The majority of columns contain character data, while others contain numeric data. 
 
 ## Explore flow_sample
 
 ```{r}
-# Use dplyr::glimpse to explore flow_sample
+# Use dplyr::glimpse to explore 3 attributes 
 dplyr::glimpse(flow_sample) # dataset has 7 columns (variables) and 218 rows
                             # most columns contain numeric data (dbl)
+
+# Use base::class to confirm class
 class(flow_sample)          # dataset is a tibble (tbl_df)
 ```
 
-The `flow_sample` dataset is a tibble with 7 columns and 218 rows. Most columns contain numeric data.
+The `flow_sample` dataset is a tibble with 7 columns and 218 rows. The majority of columns contain numeric data, while other columns contain character data. 
 
 ## Explore building_permits
 
 ```{r}
-# Use dplyr::glimpse to explore building_permits 
+# Use dplyr::glimpse to explore 3 attributes 
 dplyr::glimpse(building_permits) # dataset has 14 columns (variables) and 20,680 rows
                                  # most columns contain character data (chr)
+
+# Use base::class to confirm class
 class(building_permits)          # dataset is a tibble (spec_tbl_df)
 ```
 
@@ -136,13 +142,15 @@ The `building_permits` dataset is a tibble with 14 columns and 20,680 rows. Most
 ## Explore cancer_sample
 
 ```{r}
-# Use dplyr::glimpse to explore cancer_sample 
+# Use dplyr::glimpse to explore 3 attributes 
 dplyr::glimpse(cancer_sample) # dataset has 32 columns (variables) and 569 rows
                               # most columns contain numeric data (dbl)
+
+# Use base::class to confirm class
 class(cancer_sample)          # dataset is a tibble (spec_tbl_df)
 ```
 
-The `cancer_sample` dataset is a tibble with 32 columns and 569 rows. Most columns contain numeric data.
+The `cancer_sample` dataset is a tibble with 32 columns and 569 rows. The majority of columns contain numeric data.
 
 <!----------------------------------------------------------------------------->
 
@@ -215,7 +223,7 @@ View(trees)                                      # see complete tibble in new wi
 
 ## Exercise 3: Investigate how many missing values there are per variable. Can you find a way to plot this?
 
-**Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the base::summary function as seen above, but here we will use `dplyr` to achieve our desired result. 
+**Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the base::summary function as seen above, but here we will use `dplyr` to achieve our desired result. Investigating missing values is an important first step in exploratory data analysis, since working with variables that have a large proportion of NA values may not be meaningful or statistically sound. 
 
 ```{r}
 # Count number of NAs for each variable and calculate proportion of missing data 
@@ -229,7 +237,7 @@ na <- trees %>%
 print(na)
 ```
 
-```{r fig-1-bar}
+```{r fig-1-barplot}
 # Next, I will plot the proportion of missing data for each variable 
 ggplot(na, aes(x = variable_name, y = proportion_na)) +     
  geom_bar(stat = "identity", fill = "aquamarine3") +
@@ -238,20 +246,21 @@ ggplot(na, aes(x = variable_name, y = proportion_na)) +
  xlab("Variable") + ylab("Proportion of NA values")
 ```
 
-**Summary**: Plotting the proportion of NA values for each variable is an effective way to visualize how much data is missing from this dataset. Many variables do not have any missing values, while `plant area` has little missing data (\~1%), `latitude` and `longitude` have an intermediate amount of missing data (\~15%), and `date planted` and `cultivar name` have a substantial amount of missing data (\~50%). If we plan on using the latter two variables for an analysis, we'd need to be cautious since so much data is missing.
+**Summary**: Plotting the proportion of NA values for each variable is an effective way to visualize how much data is missing from this dataset. Many variables do not have any missing values, while `plant_area` has little missing data (\~1%), `latitude` and `longitude` have an intermediate amount of missing data (\~15%), and `date_planted` and `cultivar_name` have a substantial amount of missing data (\~50%). If we plan on using the latter two variables for an analysis, we'd need to be cautious since so much data is missing.
 
-**Note**: Beyond using the `is.na` argument, further quality control should be done while assessing missing values from the dataset. For example, in my initial viewing of `summary(trees)` when reading in the data (as seen above), I noticed that the `diameter` variable ranges from 0.00 to 435.00. Let's take a closer look using the `dplyr::count` function. 
+**Note**: Beyond using the `is.na` argument, further quality control should be done while assessing missing values from the dataset! For example, in my initial viewing of `summary(trees)` when reading in the data (as seen above), I noticed that the `diameter` variable ranges from 0.00 to 435.00. Let's take a closer look using the `dplyr::count` function. 
 
 ```{r}
 # Count number of unique diameter values
 trees %>%
   count(diameter) 
 ```
-While most observations have a realistic diameter value, some do not. In fact, for 92 trees, a diameter of 0 was recorded. And, there are some instances of unreasonably large diameters, such as the maximum recorded diameter of 435.00 inches. Since these values appear to be measurement or data entry errors, and not NAs, I will leave Exercise 3 as-is. However, this observation is important in considering how the data should be filtered for validity before future analyses. 
+
+While most observations have a realistic diameter value, some do not. In fact, for 92 trees, a diameter of 0 was recorded. And, there are some instances of unreasonably large diameters, such as the maximum recorded diameter of 435.00 inches. Since these values appear to be measurement or data entry errors, and not NAs, I will leave Exercise 3 as-is. However, this observation is important in considering how the data should be filtered for validity before use in future analyses. 
 
 ## Exercise 2: Create a new variable based on other variables in your data.
 
-**Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year planted`. I will create this variable based on the `date planted` variable, by splitting up the date into multiple columns.
+**Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year_planted`. I will create this variable based on the `date_planted` variable, by splitting up the date into multiple columns.
 
 ```{r}
 # Create new variables (year, month, day) based off the date column in the dataset
@@ -266,7 +275,7 @@ View(trees2) # check that 3 new columns have been created
 
 ## Exercise 1: Plot the distribution of a numeric variable.
 
-**Explanation**: I am interested in plotting the distribution of `year planted`. I have chosen to do this because `year planted` is a numeric variable and I am interested in exploring when most trees in Vancouver were planted. I will plot the distribution using a histogram.
+**Explanation**: I am interested in plotting the distribution of `year_planted`. I have chosen to do this because `year_planted` is a numeric variable and I am interested in exploring when most trees in Vancouver were planted. I will plot the distribution using a histogram.
 
 ```{r}
 # Check that year_planted is a numeric variable 
@@ -285,22 +294,22 @@ ggplot(trees2, aes(year_planted)) +
    xlab("Year") + ylab("Number of trees planted") 
 ```
 
-**Summary**: The above plot shows the distribution of the variable `year planted`. We can see that from the beginning of the dataset in 1989, the number of trees that were planted in a given year initially increased over time. The number of trees planted seems to peak in the mid-late 1990s, after which the number of trees planted plateaus until the early 2010s, after which point the number of trees planted in a given year declines.
+**Summary**: The above plot shows the distribution of the variable `year_planted`. We can see that from the beginning of the dataset in 1989, the number of trees that were planted in a given year initially increased over time. The number of trees planted seems to peak in the mid-late 1990s, after which the number of trees planted plateaus until the early 2010s, after which point the number of trees planted in a given year declines. Recall that this data is only available for approximately half the observations in this dataset. 
 
-## Exercise 8: Use a density plot to explore any of your variables (that are suitable for this type of plot).
+## Exercise 8: Use a density plot to explore any of your variables.
 
-**Explanation**: Finally, I am interested in exploring tree `diameter` of tree species. In order to do this, I will create a ridgeline plot using the `ggridges` package. I will plot the `diameter` data for a subset of the data that I am particularly intested in, since the full dataset contains 634 species belonging to 97 genera!
+**Explanation**: Finally, I am interested in exploring `diameter` of tree species. In order to do this, I will create a ridgeline plot using the `ggridges` package. I will plot the `diameter` data for a subset of the data that I am particularly interested in, since the full dataset contains 634 species belonging to 97 genera! It makes sense to do this because `diameter` is a numeric variable and the distribution can be plotted for each species of interest. This will allow be to easily compare the range of diameter values for each species in my plot. 
 
 ```{r}
 # First, let's confirm how many observations per species there are 
 trees2 %>%
-  count(common_name) # there are 634 species in this dataset 
+  dplyr::count(common_name) # there are 634 species in this dataset 
 ```
 
 ```{r}
 # Next, let's confirm how many observations per genus there are 
 trees2 %>%
-  count(genus_name) # there are 97 genera in this dataset
+  dplyr::count(genus_name) # there are 97 genera in this dataset
 ```
 
 I am interested in exploring tree diameter for *Betula* (aka Birch), a genus which is commonly found in my study system!
@@ -310,13 +319,13 @@ I am interested in exploring tree diameter for *Betula* (aka Birch), a genus whi
 trees2 %>% 
    dplyr::filter(genus_name == "BETULA") %>% 
    dplyr::select(diameter) %>%
-   summary() # values range from 2 to 48 inches (DBH); values seem legitimate 
+   summary() # values range from 2 to 48 inches; values seem legitimate 
 ```
-Note that units were not provided in the dataset itself, but are found in the [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. Diameter is measured as diameter at breast height (DBH): diameter in inches at a height of 1.3 meters. 
+Note that the diameter units were not provided in the dataset itself, but are found in the [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) Open Data Portal from the City of Vancouver. The `diameter` is measured as trunk diameter at breast height (DBH): diameter in inches at a height of 1.3 meters above the ground. 
 
-Finally, let's make the density plot for trunk diameter of *Betula* species. 
+Finally, let's make the density plot for DBH of *Betula* species. 
 
-```{r fig-3-ridgeline}
+```{r fig-3-ridgeplot}
 # Create density (ridgeline) plot for Betula using ggridges 
 trees2 %>% 
    filter(genus_name == "BETULA") %>% 
@@ -326,7 +335,7 @@ trees2 %>%
               x = diameter, 
               y = common_name)) +
    ggridges::geom_density_ridges() + 
-   xlim(0, 50) +            # define x-axis as 0 to 50, based on the known range
+   xlim(0, 50) +            # define x-axis as 0 to 50 based on known range of values
    theme_classic() +
    theme(legend.position = "none") +
    xlab("Diameter at breast height (inches)") + ylab("Common name")
