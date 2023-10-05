@@ -1,6 +1,8 @@
 # STAT 545A: Mini Data-Analysis Deliverable 1
 
-Nicola Rammell\
+**Author**: Nicola Rammell\
+**Contact**: rammell\@student.ubc.ca
+
 The University of British Columbia\
 Fall 2023
 
