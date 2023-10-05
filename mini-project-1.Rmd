@@ -271,7 +271,7 @@ trees2 <- trees %>%
 View(trees2) # check that 3 new columns have been created 
 ```
 
-**Summary**: I used dplyr::mutate to create new columns with the `lubridate` package in order to parse dates. The `trees2` dataset now has 3 new columns; I will be using the new `year` column in the next exercise.
+**Summary**: I used `dplyr::mutate` to create new columns with the `lubridate` package in order to parse dates. The `trees2` dataset now has 3 new columns; I will be using the new `year` column in the next exercise.
 
 ## Exercise 1: Plot the distribution of a numeric variable.
 
