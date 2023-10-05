@@ -321,7 +321,7 @@ trees2 %>%
    dplyr::select(diameter) %>%
    summary() # values range from 2 to 48 inches; values seem legitimate 
 ```
-Note that the diameter units were not provided in the dataset itself, but are found in the [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) Open Data Portal from the City of Vancouver. The `diameter` is measured as trunk diameter at breast height (DBH): diameter in inches at a height of 1.3 meters above the ground. 
+Note that the diameter units were not provided in the dataset itself, but are found in the Open Data Portal [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. The `diameter` is measured as trunk diameter at breast height (DBH): diameter in inches at a height of 1.3 meters above the ground. 
 
 Finally, let's make the density plot for DBH of *Betula* species. 
 
