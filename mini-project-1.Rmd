@@ -221,7 +221,7 @@ dplyr::glimpse(trees)                            # explore tibble characteristic
 View(trees)                                      # see complete tibble in new window
 ```
 
-## Exercise 3: Investigate how many missing values there are per variable. Can you find a way to plot this?
+## Exercise 3: Investigate how many missing values there are per variable. 
 
 **Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the base::summary function as seen above, but here we will use `dplyr` to achieve our desired result. Investigating missing values is an important first step in exploratory data analysis, since working with variables that have a large proportion of NA values may not be meaningful or statistically sound. 
 
