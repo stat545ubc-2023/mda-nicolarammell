@@ -12,11 +12,11 @@ Welcome! This is a repository that contains all files as required for UBC's STAT
 
 ## File structure
 
-Currently, this repository contains an [R Markdown](https://github.com/stat545ubc-2023/mda-nicolarammell/blob/main/mini-project-1.Rmd) (.Rmd) file with the completed deliverable and a knitted [Markdown](https://github.com/stat545ubc-2023/mda-nicolarammell/blob/main/mini-project-1.md) (.md) file that can be easily viewed online. Output plots (.png files) can also be found in the [files folder](https://github.com/stat545ubc-2023/mda-nicolarammell/tree/main/mini-project-1_files/figure-gfm).
+Currently, this repository contains an [R Markdown](https://github.com/stat545ubc-2023/mda-nicolarammell/blob/main/mini-project-1.Rmd) (.Rmd) file with the completed deliverable and a knitted Markdown (.md) file that can be easily viewed online. Output plots (.png files) can also be found in the files folder. 
 
 ## How to engage
 
-To view this project online, simply click on the [Markdown](https://github.com/stat545ubc-2023/mda-nicolarammell/blob/main/mini-project-1.md) file. To download a copy of the project, click Download ZIP and open the files using R/RStudio. To clone/collaborate on the project:
+To view this project online, simply click on the Markdown file. To download a copy of the project, click Download ZIP and open the files using R/RStudio. To clone/collaborate on the project:
 
 1.  Click the `< > Code` button in the upper right-hand corner.
 
