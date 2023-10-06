@@ -111,7 +111,7 @@ dplyr::glimpse(vancouver_trees) # dataset has 20 columns (variables) and 146,611
 class(vancouver_trees)          # dataset is a tibble (tbl_df)
 ```
 
-The `vancouver_trees` dataset is a tibble with 20 columns and 146,611 rows. The majority of columns contain character data, while others contain numeric data. 
+The `vancouver_trees` dataset is a tibble with 20 columns and 146,611 rows. The majority of columns contain character data, while others contain numeric data.
 
 ## Explore flow_sample
 
@@ -124,7 +124,7 @@ dplyr::glimpse(flow_sample) # dataset has 7 columns (variables) and 218 rows
 class(flow_sample)          # dataset is a tibble (tbl_df)
 ```
 
-The `flow_sample` dataset is a tibble with 7 columns and 218 rows. The majority of columns contain numeric data, while other columns contain character data. 
+The `flow_sample` dataset is a tibble with 7 columns and 218 rows. The majority of columns contain numeric data, while other columns contain character data.
 
 ## Explore building_permits
 
@@ -166,7 +166,7 @@ I have decided to use the `vancouver_trees` dataset for my project. Of the four 
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question:** Does the taxonomic composition of planted tree communities in Vancouver differ by neighborhood? 
+**Research Question:** Does the taxonomic composition of planted tree communities in Vancouver differ by neighborhood?
 
 <!----------------------------------------------------------------------------->
 
@@ -199,7 +199,7 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 
 ## Introduction
 
-For Task 2, I will complete Exercises 3, 2, 1, and 8. These are completed out of order because I decided to assess missing data first, create a new variable second, plot the distribution of this variable third, and lastly, create a density plot of another variable. All exercises are completed with the `vancouver_trees` dataset from `datateachr` using the `dplyr` and `ggplot2` packages. 
+For Task 2, I will complete Exercises 3, 2, 1, and 8. These are completed out of order because I decided to assess missing data first, create a new variable second, plot the distribution of this variable third, and lastly, create a density plot of another variable. All exercises are completed with the `vancouver_trees` dataset from `datateachr` using the `dplyr` and `ggplot2` packages.
 
 ### Load libraries and data
 
@@ -221,9 +221,9 @@ dplyr::glimpse(trees)                            # explore tibble characteristic
 View(trees)                                      # see complete tibble in new window
 ```
 
-## Exercise 3: Investigate how many missing values there are per variable. 
+## Exercise 3: Investigate how many missing values there are per variable.
 
-**Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the `base::summary` function as seen above, but here we will use `dplyr` to achieve our desired result. Investigating missing values is an important first step in exploratory data analysis, since working with variables that have a large proportion of NA values may not be meaningful or statistically sound. 
+**Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the `base::summary` function as seen above, but here we will use `dplyr` to achieve our desired result. Investigating missing values is an important first step in exploratory data analysis, since working with variables that have a large proportion of NA values may not be meaningful or statistically sound.
 
 ```{r}
 # Count number of NAs for each variable and calculate proportion of missing data 
@@ -248,7 +248,7 @@ ggplot(na, aes(x = variable_name, y = proportion_na)) +
 
 **Summary**: Plotting the proportion of NA values for each variable is an effective way to visualize how much data is missing from this dataset. Many variables do not have any missing values, while `plant_area` has little missing data (\~1%), `latitude` and `longitude` have an intermediate amount of missing data (\~15%), and `date_planted` and `cultivar_name` have a substantial amount of missing data (\~50%). If we plan on using the latter two variables for an analysis, we'd need to be cautious since so much data is missing.
 
-**Note**: Beyond using the `is.na` argument, further quality control should be done while assessing missing values from the dataset! For example, in my initial viewing of `summary(trees)` when reading in the data (as seen above), I noticed that the `diameter` variable ranges from 0.00 to 435.00. Let's take a closer look using the `dplyr::count` function. 
+**Note**: Beyond using the `is.na` argument, further quality control should be done while assessing missing values from the dataset! For example, in my initial viewing of `summary(trees)` when reading in the data (as seen above), I noticed that the `diameter` variable ranges from 0.00 to 435.00. Let's take a closer look using the `dplyr::count` function.
 
 ```{r}
 # Count number of unique diameter values
@@ -256,11 +256,11 @@ trees %>%
   count(diameter) 
 ```
 
-While most observations have a realistic diameter value, some do not. In fact, for 92 trees, a diameter of 0 was recorded. And, there are some instances of unreasonably large diameters, such as the maximum recorded diameter of 435.00 inches. Since these values appear to be measurement or data entry errors, and not NAs, I will leave Exercise 3 as-is. However, this observation is important in considering how the data should be filtered for validity before use in future analyses. 
+While most observations have a realistic diameter value, some do not. In fact, for 92 trees, a diameter of 0 was recorded. And, there are some instances of unreasonably large diameters, such as the maximum recorded diameter of 435.00 inches. Since these values appear to be measurement or data entry errors, and not NAs, I will leave Exercise 3 as-is. However, this observation is important in considering how the data should be filtered for validity before use in future analyses.
 
 ## Exercise 2: Create a new variable based on other variables in your data.
 
-**Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year_planted`. I will create this variable based on the `date_planted` variable, by splitting up the date into multiple columns. This exercise makes sense because the dataset provides the date in the year-month-day format. However, I would like to have this data split up into individual variables, so that I can easily work with the 'year_planted' column as a numeric variable. Similarly, this may also be desirable in order to work with the 'month_planted' column, irregardless of year.   
+**Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year_planted`. I will create this variable based on the `date_planted` variable, by splitting up the date into multiple columns. This exercise makes sense because the dataset provides the date in the YYYY-MM-DD format. However, I would like to have this data split up into individual variables, so that I can easily work with a `year_planted` column as a numeric variable. Similarly, this may also be desirable in order to work with a `month_planted` column, irregardless of year.
 
 ```{r}
 # Create new variables (year, month, day) based off the date column in the dataset
@@ -294,11 +294,11 @@ ggplot(trees2, aes(year_planted)) +
    xlab("Year") + ylab("Number of trees planted") 
 ```
 
-**Summary**: The above plot shows the distribution of the variable `year_planted`. We can see that from the beginning of the dataset in 1989, the number of trees that were planted in a given year initially increased over time. The number of trees planted seems to peak in the mid-late 1990s, after which the number of trees planted plateaus until the early 2010s, after which point the number of trees planted in a given year declines. Recall that this data is only available for approximately half the observations in this dataset. 
+**Summary**: The above plot shows the distribution of the variable `year_planted`. We can see that from the beginning of the dataset in 1989, the number of trees that were planted in a given year initially increased over time. The number of trees planted seems to peak in the mid-late 1990s, after which the number of trees planted plateaus until the early 2010s, after which point the number of trees planted in a given year declines. Recall that this data is only available for approximately half the observations in this dataset.
 
 ## Exercise 8: Use a density plot to explore any of your variables.
 
-**Explanation**: Finally, I am interested in exploring `diameter` of tree species. In order to do this, I will create a ridgeline plot using the `ggridges` package. I will plot the `diameter` data for a subset of the data that I am particularly interested in, since the full dataset contains 634 species belonging to 97 genera! It makes sense to do this because `diameter` is a numeric variable and the distribution can be plotted for each species of interest. This will allow be to easily compare the range of diameter values for each species in my plot. 
+**Explanation**: Finally, I am interested in exploring `diameter` of tree species. In order to do this, I will create a ridgeline plot using the `ggridges` package. I will plot the `diameter` data for a subset of the data that I am particularly interested in, since the full dataset contains 634 species belonging to 97 genera! It makes sense to do this because `diameter` is a numeric variable and the distribution can be plotted for each species of interest. This will allow me to easily compare the range of diameter values for each species in my plot.
 
 ```{r}
 # First, let's confirm how many observations per species there are 
@@ -321,9 +321,10 @@ trees2 %>%
    dplyr::select(diameter) %>%
    summary() # values range from 2 to 48 inches; values seem legitimate 
 ```
-Note that the diameter units were not provided in the dataset itself, but are found in the Open Data Portal [metadata](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. The `diameter` is measured as trunk diameter at breast height (DBH): diameter in inches at a height of 1.3 meters above the ground. 
 
-Finally, let's make the density plot for DBH of *Betula* species. 
+Note that the diameter units were not provided in the dataset itself, but are found in the Open Data Portal [dataset schema](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the City of Vancouver. The `diameter` is measured as trunk diameter at breast height (DBH): diameter in inches at a height of 1.3 meters above the ground.
+
+Finally, let's make the density plot for DBH of *Betula* species.
 
 ```{r fig-3-ridgeplot}
 # Create density (ridgeline) plot for Betula using ggridges 
@@ -354,8 +355,8 @@ trees2 %>%
 **Research Questions:**
 
 1.  What is the distribution of common and rare tree species in Vancouver, BC?\
-2.  Does tree community (taxonomic) composition differ by neighborhood?\
-3.  How does tree species richness vary by neighborhood?\
+2.  How does tree species richness vary by neighborhood?\
+3.  Does tree community (taxonomic) composition differ by neighborhood?\
 4.  Have the species identity of planted trees changed over time?
 
 <!----------------------------->

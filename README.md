@@ -8,11 +8,11 @@ Fall 2023
 
 ## About the project
 
-Welcome! This is a repository that contains all files as required for UBC's STAT545A Mini Data-Analysis Deliverable 1. This is an individual project completed in the first half of Fall Term as part of STAT545A: Exploratory Data Analysis I. In this project, I use `dplyr` and the `tidyverse` to explore the [Vancouver Street Tree Dataset](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the Open Data Portal, City of Vancouver.
+Welcome! This is a repository that contains all files as required for UBC's STAT545A Mini Data-Analysis Deliverable 1. This is an individual project completed in the first half of Fall Term as part of STAT545A: Exploratory Data Analysis I. In this project, I use `dplyr` and the `tidyverse` to explore the [Vancouver Street Tree Dataset](https://opendata.vancouver.ca/explore/dataset/street-trees/information/?disjunctive.species_name&disjunctive.common_name&disjunctive.on_street&disjunctive.neighbourhood_name) from the Open Data Portal, City of Vancouver, British Columbia.
 
 ## File structure
 
-Currently, this repository contains an [R Markdown](https://github.com/stat545ubc-2023/mda-nicolarammell/blob/main/mini-project-1.Rmd) (.Rmd) file with the completed deliverable and a knitted Markdown (.md) file that can be easily viewed online. Output plots (.png files) can also be found in the files folder. 
+Currently, this repository contains an [R Markdown](https://github.com/stat545ubc-2023/mda-nicolarammell/blob/main/mini-project-1.Rmd) (.Rmd) file with the completed deliverable and a knitted Markdown (.md) file that can be easily viewed online. Output plots (.png files) can also be found in the files folder.
 
 ## How to engage
 
