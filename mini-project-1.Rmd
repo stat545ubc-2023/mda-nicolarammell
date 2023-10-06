@@ -223,7 +223,7 @@ View(trees)                                      # see complete tibble in new wi
 
 ## Exercise 3: Investigate how many missing values there are per variable. 
 
-**Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the base::summary function as seen above, but here we will use `dplyr` to achieve our desired result. Investigating missing values is an important first step in exploratory data analysis, since working with variables that have a large proportion of NA values may not be meaningful or statistically sound. 
+**Explanation**: I will begin with Exercise 3 because the first way I wish to explore the dataset is to investigate the number of NA values for each of the columns. With 146,611 rows of data, scrolling through the observations and noting NA frequency is not feasible. Therefore, it makes sense to calculate the number of NAs using code and plot the proportion of NA cells in order to visualize how much of the data is missing. The number of NAs can be viewed using the `base::summary` function as seen above, but here we will use `dplyr` to achieve our desired result. Investigating missing values is an important first step in exploratory data analysis, since working with variables that have a large proportion of NA values may not be meaningful or statistically sound. 
 
 ```{r}
 # Count number of NAs for each variable and calculate proportion of missing data 
@@ -260,7 +260,7 @@ While most observations have a realistic diameter value, some do not. In fact, f
 
 ## Exercise 2: Create a new variable based on other variables in your data.
 
-**Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year_planted`. I will create this variable based on the `date_planted` variable, by splitting up the date into multiple columns.
+**Explanation**: Now that I am aware of the missing data in this dataset, I will move on to some exploratory visualization of the data. However, I will first create a new variable that I am interested in exploring: `year_planted`. I will create this variable based on the `date_planted` variable, by splitting up the date into multiple columns. This exercise makes sense because the dataset provides the date in the year-month-day format. However, I would like to have this data split up into individual variables, so that I can easily work with the 'year_planted' column as a numeric variable. Similarly, this may also be desirable in order to work with the 'month_planted' column, irregardless of year.   
 
 ```{r}
 # Create new variables (year, month, day) based off the date column in the dataset
