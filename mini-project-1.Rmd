@@ -354,7 +354,7 @@ trees2 %>%
 **Research Questions:**
 
 1.  What is the distribution of common and rare tree species in Vancouver, BC?\
-2.  Does tree community composition differ by neighborhood?\
+2.  Does tree community (taxonomic) composition differ by neighborhood?\
 3.  How does tree species richness vary by neighborhood?\
 4.  Have the species identity of planted trees changed over time?
 
