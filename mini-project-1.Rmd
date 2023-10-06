@@ -166,7 +166,7 @@ I have decided to use the `vancouver_trees` dataset for my project. Of the four 
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question:** Do tree communities in Vancouver differ by neighborhood?
+**Research Question:** Does the taxonomic composition of planted tree communities in Vancouver differ by neighborhood? 
 
 <!----------------------------------------------------------------------------->
 
