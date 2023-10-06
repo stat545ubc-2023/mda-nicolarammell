@@ -24,6 +24,6 @@ To view this project online, simply click on the Markdown file. To download a co
 
 3.  Open R/RStudio and create a new project using Version Control -\> Git (clone a project from a Git repository) -\> paste repository URL and save your local copy to a folder on your computer.
 
-4.  Now that you're set up, create your own branch and collaborate with me on the project!
+4.  Now that you're all set up, create your own branch and collaborate with me on the project!
 
 🌲🌳🌲🌳🌲
