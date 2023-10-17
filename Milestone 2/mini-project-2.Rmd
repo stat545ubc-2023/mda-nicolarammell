@@ -1,20 +1,23 @@
 ---
-title: "Mini Data Analysis Milestone 2"
-output: html_document
+title: "Mini Data-Analysis Deliverable 2"
+author: "Nicola Rammell"
+output:
+  github_document:
+    toc: true
 ---
 
-*To complete this milestone, you can either edit [this `.rmd` file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd) directly. Fill in the sections that are commented out with `<!--- start your work here--->`. When you are done, make sure to knit to an `.md` file by changing the output in the YAML header to `github_document`, before submitting a tagged release on canvas.*
+*To complete this milestone, you can edit [this `.rmd` file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd) directly. Fill in the sections that are commented out with `<!--- start your work here--->`. When you are done, make sure to knit to an `.md` file by changing the output in the YAML header to `github_document`, before submitting a tagged release on canvas.*
 
 # Welcome to the rest of your mini data analysis project!
 
-In Milestone 1, you explored your data. and came up with research questions. This time, we will finish up our mini data analysis and obtain results for your data by: 
+In Milestone 1, you explored your data. and came up with research questions. This time, we will finish up our mini data analysis and obtain results for your data by:
 
-- Making summary tables and graphs 
-- Manipulating special data types in R: factors and/or dates and times.
+-   Making summary tables and graphs
+-   Manipulating special data types in R: factors and/or dates and times.
 -   Fitting a model object to your data, and extract a result.
 -   Reading and writing data as separate files.
 
-We will also explore more in depth the concept of *tidy data.* 
+We will also explore more in depth the concept of *tidy data.*
 
 **NOTE**: The main purpose of the mini data analysis is to integrate what you learn in class in an analysis. Although each milestone provides a framework for you to conduct your analysis, it's possible that you might find the instructions too rigid for your data set. If this is the case, you may deviate from the instructions -- just make sure you're demonstrating a wide range of tools and techniques taught in this class.
 
@@ -24,7 +27,7 @@ We will also explore more in depth the concept of *tidy data.*
 
 **To submit this milestone**, make sure to knit this `.Rmd` file to an `.md` file by changing the YAML output settings from `output: html_document` to `output: github_document`. Commit and push all of your work to your mini-analysis GitHub repository, and tag a release on GitHub. Then, submit a link to your tagged release on canvas.
 
-**Points**: This milestone is worth 50 points: 45 for your analysis, and 5 for overall reproducibility, cleanliness, and coherence of the Github submission. 
+**Points**: This milestone is worth 50 points: 45 for your analysis, and 5 for overall reproducibility, cleanliness, and coherence of the Github submission.
 
 **Research Questions**: In Milestone 1, you chose two research questions to focus on. Wherever realistic, your work in this milestone should relate to these research questions whenever we ask for justification behind your work. In the case that some tasks in this milestone don't align well with one of your research questions, feel free to discuss your results in the context of a different research question.
 
@@ -43,23 +46,26 @@ By the end of this milestone, you should:
 Begin by loading your data and the tidyverse package below:
 
 ```{r, message = FALSE}
-library(datateachr) # <- might contain the data you picked!
-library(tidyverse)
+library(datateachr) # <- contains the tree data I picked!
+library(tidyverse)  # will load ggplot2, dplyr!
+library(forcats)    # for reordering factors 
 ```
 
-# Task 1: Process and summarize your data 
+# Task 1: Process and summarize your data
 
-From milestone 1, you should have an idea of the basic structure of your dataset (e.g. number of rows and columns, class types, etc.). Here, we will start investigating your data more in-depth using various data manipulation functions. 
+From milestone 1, you should have an idea of the basic structure of your dataset (e.g. number of rows and columns, class types, etc.). Here, we will start investigating your data more in-depth using various data manipulation functions.
 
-### 1.1 (1 point) 
+### 1.1 (1 point)
 
 First, write out the 4 research questions you defined in milestone 1 were. This will guide your work through milestone 2:
 
 <!-------------------------- Start your work below ---------------------------->
-1. *FILL_THIS_IN*
-2. *FILL_THIS_IN*
-3. *FILL_THIS_IN*
-4. *FILL_THIS_IN*
+
+**1.** What are the common and rare tree species planted in Vancouver, BC?\
+**2.** How does tree species richness vary by neighborhood?\
+**3.** Does tree community (taxonomic) composition differ by neighborhood?\
+**4.** Have the species identity of planted trees changed over time?
+
 <!----------------------------------------------------------------------------->
 
 Here, we will investigate your data using various data manipulation and graphing functions.
@@ -77,21 +83,225 @@ Also make sure that you're using dplyr and ggplot2 rather than base R. Outside o
 1.  Compute the *range*, *mean*, and *two other summary statistics* of **one numerical variable** across the groups of **one categorical variable** from your data.
 2.  Compute the number of observations for at least one of your categorical variables. Do not use the function `table()`!
 3.  Create a categorical variable with 3 or more groups from an existing numerical variable. You can use this new variable in the other tasks! *An example: age in years into "child, teen, adult, senior".*
-4. Compute the proportion and counts in each category of one categorical variable across the groups of another categorical variable from your data. Do not use the function `table()`!
+4.  Compute the proportion and counts in each category of one categorical variable across the groups of another categorical variable from your data. Do not use the function `table()`!
 
 **Graphing:**
 
-6. Create a graph of your choosing, make one of the axes logarithmic, and format the axes labels so that they are "pretty" or easier to read.
-7. Make a graph where it makes sense to customize the alpha transparency.
+6.  Create a graph of your choosing, make one of the axes logarithmic, and format the axes labels so that they are "pretty" or easier to read.
+7.  Make a graph where it makes sense to customize the alpha transparency.
 
-Using variables and/or tables you made in one of the "Summarizing" tasks: 
+Using variables and/or tables you made in one of the "Summarizing" tasks:
 
-8. Create a graph that has at least two geom layers. 
-9. Create 3 histograms, with each histogram having different sized bins. Pick the "best" one and explain why it is the best.
+8.  Create a graph that has at least two geom layers.
+9.  Create 3 histograms, with each histogram having different sized bins. Pick the "best" one and explain why it is the best.
 
 Make sure it's clear what research question you are doing each operation for!
 
 <!------------------------- Start your work below ----------------------------->
+
+**Please Note:** For the Summarizing Options 1-4, Option 1 and Option 3 require a numerical variable. However, none of my 4 research questions are based on a numerical variable! So, I will complete Option 2 twice (for RQs 1-2) and Option 4 once (for RQ 3). For RQ 4, I will treat the variable `year_planted` as a numerical variable for the purpose of completing Option 3. I will do this because I would like to group `year_planted` into categories of "1980s", 1990s", "2000s", and "2010s" for the purpose of this exercise.
+
+#### Research Question 1: What are the common and rare tree species and/or genera planted in Vancouver, BC?
+
+**Summarizing:** I will complete Option 2, computing the number of observations for a categorical variable. This helps answer the RQ because first, I will compute the number of observations for the categorical `genus_name` variable to gain insight into which genera are common and which are rare. Next, I will compute the number of each tree species (by `common_name`) planted in Vancouver, BC. In other words, by ordering values from small to large, I will find out which are the most rare and common tree genera and species planted!
+
+```{r}
+# View dataset and confirm genus_name and common_name are character variables
+View(vancouver_trees)            # view complete df in new window
+dplyr::glimpse(vancouver_trees)  # genus_name and common_name = <chr>
+
+# compute number of observations for categorical genus_name variable
+task1.2.1.1 <- vancouver_trees %>%
+  dplyr::count(genus_name) %>%
+  dplyr::arrange(n)
+head(task1.2.1.1)  # rare genera include Albizia, Halesia, and Kalopanax 
+tail(task1.2.1.1)  # common genera include Fraxinus, Prunus, and Acer
+
+# next, also compute number of observations for each species
+task1.2.1.2 <- vancouver_trees %>%
+  dplyr::count(common_name) %>%
+  dplyr::arrange(n)
+head(task1.2.1.2)  # rare species include Alpine Fir, Bitter Cherry, Bosc Pear
+tail(task1.2.1.2)  # common species include Kwansan Flowering Cherry, Pissard Plum
+```
+
+**Graphing:** I will complete Option 6, making a barplot where one of the axes is logarithmic, and the axis labels are formatted "pretty". Specifically, I will plot log10(Number of trees planted) by Genus. This will directly help answer the RQ because it will show the most common genera and the most rare genera! I will also order the bars from most common to most rare to help illustrate this pattern more clearly. As seen by the plot below, *Acer* and *Prunus* were the most commonly planted genera in Vancouver from 1989 - 2019.
+
+```{r fig1-barplot-logarithmic}
+# barplot with number of trees planted vs. genus to see rare and common genera
+task1.2.1.1 %>% 
+  ggplot(aes(x = fct_rev(fct_reorder(genus_name, n)), 
+             y = n)) +                                     # order common to rare
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  scale_y_log10() +                                        # y-axis is log10
+  theme_classic() +                                        # classic theme
+  theme(axis.text.x = element_text(angle = 90)) +          # x-axis labels vertical
+  theme(axis.text.x = element_text(size = 5)) +            # make text smaller
+  ylab(expression(Log[10] ~ "(Number of trees planted)")) + # make label "pretty"
+  xlab("Genus") 
+```
+
+#### Research Question 2: How does tree species richness vary by neighborhood?
+
+**Summarizing:** Next, I will complete a second variation of Option 2, computing the *unique* number of observations for a categorical variable. This directly helps answer the RQ because I will now compute the number of unique common names in each of the neighborhood categories. In other words, I will take a first look at species richness in each neighborhood!
+
+```{r}
+# compute number of (unique spp.) observations for neighborhood variable
+task1.2.2 <- vancouver_trees %>% 
+  dplyr::group_by(neighbourhood_name) %>% 
+  dplyr::summarise(species_richness = n_distinct(common_name)) %>%
+  dplyr::arrange(species_richness) %>%
+  ungroup()
+head(task1.2.2)
+```
+
+**Graphing:** I will complete Option 8, by creating a graph that has at least two geom layers. Specifically, I will make a barplot of `species_richness` vs. `neighbourhood_name`, but I will add a second geom layer to overlay text onto the plot. The text will show the specific species richness value for each neighborhood, eliminating the need for text on the y-axis. This will directly help answer the RQ, by clearly showing how tree species richness varies by neighborhood. 
+
+```{r fig2-barplot-layered}
+# barplot with species richness vs. neighborhood with added geom layer
+task1.2.2 %>% 
+  ggplot(aes(x = fct_reorder(neighbourhood_name, species_richness), 
+           y = species_richness)) +                   # order low to high
+  geom_bar(stat = "identity", fill = "pink4") +            
+  theme_classic() +                                   # classic theme
+  theme(axis.text.x = element_text(angle = 90)) +     # x-axis labels vertical
+  theme(axis.text.x = element_text(size = 8)) +       # text size
+  ylab("Species richness") +
+  xlab("Neighbourhood")  +
+  theme(axis.text.y = element_blank(),                # remove y-axis labels
+        axis.ticks.y = element_blank()) +             # remove y-axis ticks
+  ylim(0, 450) + 
+  geom_text(aes(label = species_richness),            # add geom layer for text
+            position = position_dodge(width = 0.5), vjust = -0.75) 
+```
+
+
+
+
+
+
+#### Research Question 3: Does tree community (taxonomic) composition differ by neighborhood?
+
+**Summarizing:** I will complete Option 4, computing the proportion and counts in each category of one categorical variable across group of another categorical variable. This helps answer the RQ because I will compute the *proportion* that each tree genera makes up in each neighborhood. This will provide a first look into the overall community composition by neighborhood, as guided directly by the research question!
+
+Note: This exercise will pivot data into the "wide" format, which is not considered tidy data. However, for the purpose of this exercise, it is the standard format to view species composition data so we will go ahead and use the `pivot_wider` function, being aware of the limitations of using this format. The `pivot_longer` function is also used to create a "tidy" version of the dataframe, as well!
+
+```{r}
+# compute genera counts by neighborhood using pivot_wider
+task1.2.3.1 <- vancouver_trees %>%
+  dplyr::select(neighbourhood_name, genus_name) %>%
+  dplyr::group_by(neighbourhood_name, genus_name) %>%
+  dplyr::summarise(n = n()) %>%           # adds column with counts of each genus
+  ungroup() %>%
+  tidyr::pivot_wider(names_from = genus_name, 
+                     values_from = n) %>% # pivot so each genus is now a column
+  replace(is.na(.), 0) %>%                # replace NAs with zeros
+  dplyr::rowwise() %>%                    # execute next operation across each row
+  mutate(TOTAL = sum(c_across(2:98)))     # adds a TOTAL (sum) column
+head(task1.2.3.1)  
+
+# next, use pivot_longer to create a tidy version of this dataset
+task1.2.3.2 <- task1.2.3.1 %>%
+  select(-TOTAL) %>% 
+  tidyr::pivot_longer(
+    cols = ABIES:VIBURNUM, 
+    names_to = "genus", 
+    values_to = "counts")
+head(task1.2.3.2)
+```
+
+```{r} 
+# compute genera proportions by neighborhood (convert counts to proportion)
+task1.2.3.3 <- task1.2.3.1 %>%
+  dplyr::mutate(across(c(2:99), .fns = ~./TOTAL))  # divide by the sum
+head(task1.2.3.3)
+
+# next, use pivot_longer to create a tidy version of this dataset
+task1.2.3.4 <- task1.2.3.3 %>%
+  select(-TOTAL) %>% 
+  tidyr::pivot_longer(
+    cols = ABIES:VIBURNUM, 
+    names_to = "genus", 
+    values_to = "proportion")
+head(task1.2.3.4)
+```
+
+**Graphing:** I will complete Option ??? What option am I going for here - Same as above and just find a way to add text to this?
+
+
+```{r fig3-barplot-layered}
+# explain what you're doing here...
+task1.2.3.4 %>%
+  ggplot(aes(x = neighbourhood_name, y = proportion, fill = genus)) +
+  geom_col() + 
+  theme_classic() +
+  coord_flip() +
+  theme(axis.text.x = element_text(size = 7)) +       # text size
+  ylab("Relative abundance by genus") +
+  xlab("")  +
+  theme(legend.position = "none")
+
+
+
+```
+
+
+#### Research Question 4: Have the species identity of planted trees changed over time?
+
+**Summarizing:** I will complete Option 3, creating a categorical variable (with 3 or more groups) from the "numerical" (see the Note above) `year` variable. This helps answer the RQ because we may be interested in how the species identify of planted trees has changed by comparing one decade to the next. Therefore, I will calculate a new variable called `decade` with the categories of "1980s", 1990s", "2000s", and "2010s".
+
+```{r}
+# create year_planted variable from date_planted variable for this exercise
+task1.2.4.0 <- vancouver_trees %>%
+  dplyr::mutate(year_planted = lubridate::year(date_planted),   # create year column
+                month_planted = lubridate::month(date_planted), # create month column 
+                day_planted = lubridate::day(date_planted))     # create day column
+head(task1.2.4.0)
+
+# check that year_planted can be considered a "numerical variable" for this exercise
+dplyr::glimpse(task1.2.4.0)  # OK, year_planted is <dbl>
+
+# also, check range of values in the year_planted variable
+summary(task1.2.4.0$year_planted)  # values range from 1989-2019
+
+# now, create a new categorical variable from the year_planted variable
+task1.2.4.1 <- task1.2.4.0  %>%
+  mutate(decade = factor(case_when(year_planted < 1990 ~ "1980s",
+                            year_planted < 2000 ~ "1990s",
+                            year_planted < 2010 ~ "2000s", 
+                            year_planted < 2020 ~ "2010s"), 
+                         levels = c('1980s', '1990s', '2000s', '2010s')))
+View(task1.2.4.1)              # confirm values all look correct in new window
+# dplyr::glimpse(task1.2.4.1)  # note `decade` is factor with 4 levels
+head(task1.2.4.1)  
+```
+
+**Graphing:** I will complete Option 7, making a graph where it makes sense to customize the alpha transparency. Here, I will graph the number of trees by species (for a specific genus of interest) planted over time. Therefore, I will also be using a one of the new variables I created in the summarizing task above: `year_planted`. For this graph, it makes sense to customize the alpha transparency simply because there are many overlapping lines (especially near zero), and I would like them all to be visible! Without the transparency feature, some lines would be completely overridden by others. 
+
+I am interested in the Ash (*Fraxinus*) genus, because of their significance for bird forage, so I will plot data from this group. This helps answer the research question directly because it helps visualize how the species identity of planted trees changes over time; however, note this is only for one particular genus of interest. The answer may be different for different genera!
+
+```{r fig4-lineplot}
+# count up total numbers of trees planted by common name in each year
+task1.2.4.2 <- task1.2.4.0 %>%
+  dplyr::filter(!is.na(year_planted)) %>% # removes 76548 rows (recall Milestone 1)
+  dplyr::group_by(year_planted, genus_name, common_name) %>%
+  dplyr::summarise(n = n()) %>%           # adds column with counts of each common name
+  ungroup()
+head(task1.2.4.2)
+
+# plot number of Ash tree species planted over time
+task1.2.4.2 %>%
+  filter(genus_name == "FRAXINUS") %>% 
+  ggplot(aes(year_planted, n)) +
+  geom_line(aes(colour = common_name), alpha = 0.5) +  # adds transparency
+  ylab("Number of trees planted") +
+  xlab("Year") +
+  scale_colour_discrete("") +
+  theme_classic() +
+  theme(legend.position = "top") + 
+  theme(legend.text = element_text(size = 5))  +
+  theme(plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches")) 
+```
 
 <!----------------------------------------------------------------------------->
 
@@ -101,10 +311,9 @@ Based on the operations that you've completed, how much closer are you to answer
 
 <!------------------------- Write your answer here ---------------------------->
 
-
 <!----------------------------------------------------------------------------->
 
-# Task 2: Tidy your data 
+# Task 2: Tidy your data
 
 In this task, we will do several exercises to reshape our data. The goal here is to understand how to do this reshaping with the `tidyr` package.
 
@@ -153,7 +362,7 @@ Explain your decision for choosing the above two research questions.
 
 Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc.).
 
-(If it makes more sense, then you can make/pick two versions of your data, one for each research question.) 
+(If it makes more sense, then you can make/pick two versions of your data, one for each research question.)
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -222,15 +431,15 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 
 <!----------------------------------------------------------------------------->
 
-# Overall Reproducibility/Cleanliness/Coherence Checklist 
+# Overall Reproducibility/Cleanliness/Coherence Checklist
 
 Here are the criteria we're looking for.
 
 ## Coherence (0.5 points)
 
-The document should read sensibly from top to bottom, with no major continuity errors. 
+The document should read sensibly from top to bottom, with no major continuity errors.
 
-The README file should still satisfy the criteria from the last milestone, i.e. it has been updated to match the changes to the repository made in this milestone. 
+The README file should still satisfy the criteria from the last milestone, i.e. it has been updated to match the changes to the repository made in this milestone.
 
 ## File and folder structure (1 points)
 
@@ -244,7 +453,7 @@ Every level-1 folder (that is, the ones stored in the top level, like "Milestone
 
 All output is recent and relevant:
 
--   All Rmd files have been `knit`ted to their output md files. 
+-   All Rmd files have been `knit`ted to their output md files.
 -   All knitted md files are viewable without errors on Github. Examples of errors: Missing plots, "Sorry about that, but we can't show files that are this big right now" messages, error messages from broken R code
 -   All of these output files are up-to-date -- that is, they haven't fallen behind after the source (Rmd) files have been updated.
 -   There should be no relic output files. For example, if you were knitting an Rmd to html, but then changed the output to be only a markdown file, then the html file is a relic and should be deleted.
@@ -253,7 +462,7 @@ Our recommendation: delete all output files, and re-knit each milestone's Rmd fi
 
 ## Tagged release (0.5 point)
 
-You've tagged a release for Milestone 2. 
+You've tagged a release for Milestone 2.
 
 ### Attribution
 
