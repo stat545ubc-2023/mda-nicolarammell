@@ -48,6 +48,7 @@ Begin by loading your data and the tidyverse package below:
 ```{r, message = FALSE}
 library(datateachr) # <- contains the tree data I picked!
 library(tidyverse)  # will load ggplot2, dplyr!
+library(tidyr)      # for tidying data
 library(forcats)    # for reordering factors 
 library(broom)      # for model output objects to tibbles
 ```
@@ -62,7 +63,7 @@ First, write out the 4 research questions you defined in milestone 1 were. This 
 
 <!-------------------------- Start your work below ---------------------------->
 
-**1.** What are the common and rare tree species planted in Vancouver, BC?\
+**1.** What are the common and rare tree genera and species planted in Vancouver, BC?\
 **2.** How does tree species richness vary by neighborhood?\
 **3.** Does tree community (taxonomic) composition differ by neighborhood?\
 **4.** Have the species identity of planted trees changed over time?
@@ -126,7 +127,7 @@ head(task1.2.1.2)  # rare species include Alpine Fir, Bitter Cherry, Bosc Pear
 tail(task1.2.1.2)  # common species include Kwansan Flowering Cherry, Pissard Plum
 ```
 
-**Graphing:** I will complete Option 6, making a barplot where one of the axes is logarithmic, and the axis labels are formatted "pretty". Specifically, I will plot log~10~(Number of trees planted) by Genus. This will directly help answer the RQ because it will show the most common genera and the most rare genera! I will also order the bars from most common to most rare to help illustrate this pattern more clearly. As seen by the plot below, *Acer* (Maples) and *Prunus* (includes Cherry trees) were the most commonly planted genera in Vancouver from 1989 - 2019.
+**Graphing:** I will complete Option 6, making a barplot where one of the axes is logarithmic, and the axis labels are formatted "pretty", as seen by the subscript. Specifically, I will plot log~10~(Number of trees planted) by Genus. This will directly help answer the RQ because it will show the most common genera and the most rare genera! I will also order the bars from most common to most rare to help illustrate this pattern more clearly. As seen by the plot below, *Acer* (Maples) and *Prunus* (includes Cherry trees) were the most commonly planted genera in Vancouver from 1989 - 2019.
 
 ```{r fig1-barplot-logarithmic}
 # barplot with number of trees planted vs. genus to see rare and common genera
@@ -138,7 +139,7 @@ task1.2.1.1 %>%
   theme_classic() +                                         # classic theme
   theme(axis.text.x = element_text(angle = 90)) +           # x-axis labels vertical
   theme(axis.text.x = element_text(size = 5)) +             # make text smaller
-  ylab(expression(Log[10] ~ "(Number of trees planted)")) + # make label "pretty"
+  ylab(expression(log[10] ~ "(number of trees)")) + # make label "pretty"
   xlab("Genus") 
 ```
 
@@ -176,7 +177,7 @@ task1.2.2 %>%
             position = position_dodge(width = 0.5), vjust = -0.75) 
 ```
 
-#### Research Question 3: Does tree community (taxonomic) composition differ by neighborhood?
+#### Research Question 3: Does tree community composition differ by neighborhood?
 
 **Summarizing:** I will complete Option 4, computing the proportion and counts in each category of one categorical variable across group of another categorical variable. This helps answer the RQ because I will compute the *proportion* that each tree genera makes up in each neighborhood. This will provide a first look into the overall community composition by neighborhood, as guided directly by the research question!
 
@@ -197,7 +198,7 @@ task1.2.3.1 <- vancouver_trees %>%
 print(task1.2.3.1)  
 ```
 
-The above wide-format tibble shows the *counts* in each genus category by neighborhood category. A "total" column is added at the end, which shows the sums (total count per neighborhood). 
+The above wide-format tibble shows the *counts* in each genus category by neighborhood category. A "total" column is added at the end, which shows the sums (total count per neighborhood).
 
 ```{r}
 # next, use pivot_longer to create a tidy version of this dataset
@@ -210,7 +211,7 @@ task1.2.3.2 <- task1.2.3.1 %>%
 head(task1.2.3.2)
 ```
 
-The above tibble uses `pivot_longer` to transform the dataframe into a long farmat that is more useful for data visualization. This tibble will be used in the graphing exercise below! 
+The above tibble uses `pivot_longer` to transform the dataframe into a long farmat that is more useful for data visualization. This tibble will be used in the graphing exercise below!
 
 ```{r}
 # also compute genera proportions by neighborhood (convert counts to proportion)
@@ -219,7 +220,7 @@ task1.2.3.3 <- task1.2.3.1 %>%
 head(task1.2.3.3)
 ```
 
-The above wide-format tibble shows the *proportions* in each genus category by neighborhood category. A "total" column is added at the end, which shows the sums (total = 1). 
+The above wide-format tibble shows the *proportions* in each genus category by neighborhood category. A "total" column is added at the end, which shows the sums (total = 1).
 
 ```{r}
 # next, use pivot_longer to create a tidy version of this dataset
@@ -232,9 +233,9 @@ task1.2.3.4 <- task1.2.3.3 %>%
 head(task1.2.3.4)
 ```
 
-Similarly, the above tibble uses `pivot_longer` to transform the dataframe into a long format that is more useful for data visualization. 
+Similarly, the above tibble uses `pivot_longer` to transform the dataframe into a long format that is more useful for data visualization. This tibble will also be used in the graphing exercise below.
 
-**Graphing:** I will complete Option 8, by again creating a graph that has at least two geom layers. This time, I will be plotting the counts of each genus making up the planted tree community in each neighborhood. To add a second geom layer, I will again add text to the plot. This time, I will add labels to the largest category, *Acer*, in the stacked barplot. 
+**Graphing:** I will complete Option 8, by again creating a graph that has at least two geom layers. This time, I will be plotting the counts of each genus making up the planted tree community in each neighborhood. This helps answer the research question because it allows us to visualize how tree community composition (by genera) varies across the neighborhoods. To add a second geom layer, I will again add text to the plot. This time, I will add labels to the largest category, *Acer*, in the stacked barplot.
 
 ```{r fig3-barplot-layered}
 # barplot with tree counts by genus vs. neighborhood with added geom text layer
@@ -247,18 +248,35 @@ task1.2.3.2 %>%
   ylab("Number of trees planted") +
   xlab("")  +
   theme(legend.position = "none") + 
-  geom_text(aes(label = ifelse(genus == "ACER", # if genus = ACER, add text label 
+  geom_text(aes(label = ifelse(genus == "ACER", # if genus = ACER, add text  
                                as.character(counts), "")), 
                 position = position_stack(vjust = .5), 
                 size = 2.5, 
-                colour = "red4")
+                colour = "black")
 ```
 
-For clarity, the legend has been removed from the above plot, since we are not necessarily interested in seeing the identity of all genera per se. Instead, we may be interested in viewing how many *Acer* trees are planted *relative* to the other genera in each of the neighboorhoods. If this is of interest, we could make a plot like the one above that shows the counts for the *Acer* genus in red. 
+For clarity, the legend has been removed from the above plot, since we are not necessarily interested in seeing the identity of all genera per se. Instead, we may be interested in viewing how many *Acer* trees are planted relative to the other genera in each of the neighborhoods. If this is of interest, we could make a plot like the one above that shows the counts for the *Acer* genus to help answer the research question. The above plot shows both the total number of trees planted in each neighborhood, as well as the contribution made by each genus.
+
+However, to answer the question of how community composition differs between the neighborhoods, we may also wish to see a plot based directly on *relative* abundances as seen below. For clarity, the legend has again been removed from the plot.
+
+```{r fig4-barplot-layered}
+# barplot with tree proportions by genus vs. neighborhood 
+task1.2.3.4  %>%
+  ggplot(aes(x = neighbourhood_name, y = proportion, fill = genus)) +
+  geom_col() + 
+  theme_classic() +
+  coord_flip() +
+  theme(axis.text.x = element_text(size = 7)) +       
+  ylab("Relative abundance") +
+  xlab("")  +
+  theme(legend.position = "none") 
+```
+
+For clarity, the legend has again been removed from the above plot. Abundant genera are *Acer* (salmon), *Prunus* (purple), *Fraxinus* (green), and *Tilia* (pink)
 
 #### Research Question 4: Have the species identity of planted trees changed over time?
 
-**Summarizing:** I will complete Option 3, creating a categorical variable (with 3 or more groups) from the "numerical" (see the Note above on line 102) `year` variable. This helps answer the RQ because we may be interested in how the species identify of planted trees has changed by comparing one decade to the next, instead of year by year. Therefore, I will calculate a new variable called `decade` with the categories of "1980s", 1990s", "2000s", and "2010s".
+**Summarizing:** I will complete Option 3, creating a categorical variable (with 3 or more groups) from the "numerical" (please see the Note above on line 103) `year` variable. This helps answer the RQ because we may be interested in how the species identify of planted trees has changed by comparing one decade to the next, instead of year by year. Therefore, I will calculate a new variable called `decade` with the categories of "1980s", 1990s", "2000s", and "2010s".
 
 ```{r}
 # create year_planted variable from date_planted variable for this exercise
@@ -288,7 +306,7 @@ View(task1.2.4.1)              # confirm values all look correct in new window
 head(task1.2.4.1)  
 ```
 
-**Graphing:** I will complete Option 7, making a graph where it makes sense to customize the alpha transparency. Here, I will graph the number of trees by species (for a specific genus of interest) planted over time. Therefore, I will also be using a one of the new variables I created in the summarizing task above: `year_planted`. For this graph, it makes sense to customize the alpha transparency simply because there are many overlapping lines (especially near zero), and I would like them all to be visible. Without the transparency feature, some lines would be completely overridden by others!
+**Graphing:** I will complete Option 7, making a graph where it makes sense to customize the alpha transparency. Here, I will graph the number of trees by species (for a specific genus of interest) planted over time. Therefore, I will also be using a one of the new variables I created in the summarizing task above: `year_planted`. For this graph, it makes sense to customize the alpha transparency simply because there are many overlapping lines, and I would like them all to be visible. Without the transparency feature, some lines would be completely overridden by others!
 
 I am interested in the Ash (*Fraxinus*) genus, because of their significance for bird forage, so I will plot data from this group. This helps answer the research question directly because it helps visualize how the species identity of planted trees changes over time; however, note this is only for one particular genus of interest. The answer may be different for different genera.
 
@@ -302,7 +320,7 @@ task1.2.4.2 <- task1.2.4.0 %>%
 head(task1.2.4.2)
 ```
 
-```{r fig4-lineplot}
+```{r fig5-lineplot}
 # plot number of Ash tree species planted over time
 task1.2.4.2 %>%
   filter(genus_name == "FRAXINUS") %>% 
@@ -317,6 +335,8 @@ task1.2.4.2 %>%
   theme(plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "inches")) 
 ```
 
+The above plot suggests that yes, the identity of planted Ash trees did change over time. In the early years shown on the plot, there are many Raywood Ash trees planted (shown in pink), whereas in the more recent years shown on the plot, Autumn Applauce and Flowering Ash (shown in Brown and Green, respectively) seen to become the most common Ash trees planted.
+
 <!----------------------------------------------------------------------------->
 
 ### 1.3 (2 points)
@@ -325,10 +345,15 @@ Based on the operations that you've completed, how much closer are you to answer
 
 <!------------------------- Write your answer here ---------------------------->
 
+Based on the 8 operations completed, I have made progress in answering each of my research questions.
 
+For RQ1, *What are the common and rare tree genera and species planted in Vancouver, BC?*, I was able to quickly view the answers in the form of summary tables. I was also able to produce a plot that showed the frequency of planted genera from most common to most rare.
 
+For RQ2, *How does tree species richness vary by neighborhood?*, I was also able to produce a plot that demonstrated the species richness in each neighborhood. Similarly, for RQ3, *Does tree community (taxonomic) composition differ by neighborhood?*, I produced plots that showed the total (counts) and relative abundance (proportion) of the different genera planted in the different neighborhoods. These were useful exploratory visualizations; however, these operations did not actually answer the questions with any kind of statistical test. I am still unclear on these two research questions.
 
+Lastly, for RQ4, *Have the species identity of planted trees changed over time?*, I was able to delve into this question for one genus of interest and show that likely, yes, the species identity of planted Ash trees did actually change over time. This was an interesting observation, however, again this question was not answered with any certainty since there was no statistical test involved and this was only done for one particular genus of interest.
 
+Overall, I am interested in looking more into the questions regarding how species richness and community composition differ by neighborhood, since these questions still remain the most unclear. Specifically, I would like to refine the research question to ask about the difference between East and West Vancouver neighborhoods, so that the dataset can provide multiple samples per category.
 
 <!----------------------------------------------------------------------------->
 
@@ -348,20 +373,19 @@ Based on the definition above, can you identify if your data is tidy or untidy? 
 
 <!--------------------------- Start your work below --------------------------->
 
-
 ```{r}
 # view the original vancouver_trees dataframe and review columns
 View(vancouver_trees)
 glimpse(vancouver_trees)
 ```
 
-Overall, yes my dataset is already tidy. Each column represents its own variable, and each cell has only 1 value, with the exception of the `date_planted` column which is discussed below. 
+Overall, yes, my dataset is already tidy. Each column represents its own variable, and each cell has only 1 value, with the exception of the `date_planted` column which is discussed below.
 
-In the numeric `tree_id`, `civic_number`, `height_range_id`, `diameter`, `latitude`, and `longitude` columns, each row is an observation and each cell has only one value. If the data weren't tidy, the `latitude`, and `longitude` data may be included in the same cell, for example. 
+In the numeric `tree_id`, `civic_number`, `height_range_id`, `diameter`, `latitude`, and `longitude` columns, each row is an observation and each cell has only one value. If the data weren't tidy, the `latitude`, and `longitude` data may be included in the same cell, for example.
 
-The character data columns are also tidy: `genus` and `species` are in separate columns, for example. If the data were not tidy, the *Genus species* information may be included all in one cell. This would have made it very difficult to do the above analyses; we would have had to separate the column into two before proceeding! 
+The character data columns are also tidy: `genus` and `species` are in separate columns, for example. If the data were not tidy, the *Genus species* information may be included all in one cell. This would have made it very difficult to do the above analyses; we would have had to separate the column into two before proceeding!
 
-Tidying of the data could be improved by separating the `date_planted` column into 3 columns: `year_planted`, `month_planted`, and `day_planted`. That way, if we wish to analyse the data by month, irregardless of year for example, this wouldn't require any further data manipulation. 
+Tidying of the data could be improved by separating the `date_planted` column into 3 columns: `year_planted`, `month_planted`, and `day_planted`. That way, if we wish to analyse the data by month, irregardless of year for example, this wouldn't require any further data manipulation.
 
 <!----------------------------------------------------------------------------->
 
@@ -375,21 +399,55 @@ Be sure to explain your reasoning for this task. Show us the "before" and "after
 
 <!--------------------------- Start your work below --------------------------->
 
-To begin with, the `vancouver_trees` dataframe can be considered tidy. 
+To begin with, the `vancouver_trees` dataframe can be considered tidy, as discussed above.
 
 ```{r}
-# View the tidy dataset 
+# see the tidy dataframe 
 head(vancouver_trees)
+tail(vancouver_trees)
 ```
 
-So, I will create an untidy dataframe below. 
+So, I will create an untidy dataframe below. To do this, I will put `latitude` and `longitude` together into 1 column, and `genus_name` and `species_name` together into 1 column. I am doing this because I think this is a common mistake in datasets, and if I am to run into this issue in the future, I would like to know how to separate them into different columns! Since I will need to "tidy" the "untidying" I am doing to this dataset below, this is a useful and practical exercise to try.
 
 ```{r}
+# create df with latitude + longitude together in 1 column, separated by ", "
+task2.2.0 <- vancouver_trees %>% 
+  tidyr::unite(coordinates, latitude,longitude, sep = ", ")
+View(task2.2.0)    # see coordinates are now in the form: 49.217759, -123.114718
+head(task2.2.0)  
 
-
-
+# next, create df with genus + species together in 1 column, separated by " "
+task2.2.1 <- task2.2.0 %>% 
+  tidyr::unite(scientific_name, genus_name,species_name, sep = " ")
+View(task2.2.1)  # see names are now in the form: SORBUS ARIA
+head(task2.2.1)
 ```
 
+The above dataframe has a `coordinates` column in the form "latitude, longitude" because I think this is how datasets often have coordinates stored, delimited by a comma. On the other hand, I made the `scientific_name` column in the form "GENUS SPECIES" because we wouldn't expect data to come with any delimiter when it comes to scientific names.
+
+Next, I will tidy the now untidy dataframe below.
+
+```{r}
+# see the untidy dataframe
+head(task2.2.1)
+tail(task2.2.1)
+
+# now, tidy the dataframe!
+task2.2.2 <- task2.2.1 %>% 
+  tidyr::separate_wider_delim(coordinates, ",", 
+                       names = c("latitude", "longitude")) %>%
+  tidyr::separate_wider_delim(scientific_name, " ", 
+                       names = c("genus", "species", NA, NA, NA), # deals with Xs
+                       too_few = "align_start") %>%               # keep 1st two elements
+  dplyr::mutate(year_planted = lubridate::year(date_planted),     # create year column
+                month_planted = lubridate::month(date_planted),   # create month column 
+                day_planted = lubridate::day(date_planted)) %>%   # create day column
+  dplyr::select(-date_planted)
+head(task2.2.2)
+tail(task2.2.2)
+```
+
+As seen in the dataframe above, `genus`, `species`, `latitude`, and `longitude` data have all been returned to their own separate columns. Separating and re-uniting the genus and species data actually improved the "tidyness" of the dataset, because in the original dataset there were "Xs" in some of the cells along with the genus or species name. These "X" probably come from crossing cultivar strains that should have been in the cultivar column. By retaining only genus and species, I have tidyied up the scientific name columns. Additionally, I separated the date column into `date_planted`, `month_planted`, and `day_planted` so that each cell contains only one piece of information. The dataframe is now tidy!
 
 <!----------------------------------------------------------------------------->
 
@@ -399,8 +457,9 @@ Now, you should be more familiar with your data, and also have made progress in 
 
 <!-------------------------- Start your work below ---------------------------->
 
-**1.**  Does planted tree species richness vary between East and West Vancouver neighborhoods?
-**2.**  Does planted tree community composition differ between East and West Vancouver neighborhoods?
+Based on my explanations in Task 1.3, I am slightly revising my research questions. The research questions that I am now most intersted in answering are:
+
+**1.** Does planted tree species richness vary between East and West Vancouver neighborhoods? **2.** Does planted tree community composition differ between East and West Vancouver neighborhoods?
 
 <!----------------------------------------------------------------------------->
 
@@ -408,20 +467,84 @@ Explain your decision for choosing the above two research questions.
 
 <!--------------------------- Start your work below --------------------------->
 
+I have decided to select two research questions based closely on my original Research Questions 2-3 from Milestone 1. These two research questions were: *How does tree species richness vary by neighborhood?*; and *Does tree community composition differ by neighborhood?*
 
+As described in Task 1.3, these are the two research questions that I was least able to answer through my various exploratory operations in Task 1.2. Based on the graphs that I created, there does appear to be a difference in species richness and maybe in community composition between the neighborhoods, but the answers to these questions are still not clear.
 
+Since I only have 1 value of species richness per neighborhood in the dataframe that I created to answer this question, I would like to slightly revise both of these questions. Working through the exercises lead me to revise my two research questions to instead be: *Does planted tree species richness vary between East and West Vancouver neighborhoods?*; and *Does planted tree community composition differ between East and West Vancouver neighborhoods?*
 
+I am interested in exploring these research questions further because it was difficult to obtain an answer based on previous exploratory analyses. I am also interested to know whether there is a difference in the City of Vancouver's tree planting in generally more wealthy (West) versus less wealthy neighborhoods (East). My neighborhood is in East Vancouver in Hastings-Sunrise, and I would also like to see how this neighborhood fits into the overall pattern with the rest!
 
 <!----------------------------------------------------------------------------->
 
-Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc.).
+Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidying, dropping irrelevant columns, etc.).
 
 (If it makes more sense, then you can make/pick two versions of your data, one for each research question.)
 
 <!--------------------------- Start your work below --------------------------->
 
+To answer the first question, *Does planted tree species richness vary between East and West Vancouver neighborhoods?*, I will need to make a dataframe that includes `neighboorhood_name`, `species_richness`, and `location` which will contain data labelled either East or West. I will create this column based off the existing `longitude` column. To do so, I will take the mean longitude value for each neighborhood, and use this to assign each neighborhood to a category of "East" or "West". This will be based on the Vancouver Main Street longitude coordinates of -123.100796.
 
+```{r}
+# create a dataframe with the new location column
+task2.3.1 <- vancouver_trees %>% 
+  dplyr::group_by(neighbourhood_name) %>% 
+  dplyr::summarise(species_richness = n_distinct(common_name),  # calculate spp. richness
+            mean_longitude = mean(longitude, na.rm = TRUE)) %>% # calculate avg longitude
+  dplyr::mutate(mean_longitude = mean_longitude*(-1)) %>%       # make value positive
+  dplyr::mutate(location = factor(case_when(mean_longitude < 123.100796 ~ "East",
+                                 mean_longitude > 123.100796 ~ "West"), 
+                                 levels = c('East', 'West')))   # add East and West column
+print(task2.3.1)
+```
 
+The above dataframe could now be used to answer my new research question! Before proceeding, I would like to first visualize the new dataframe with species richness data by East and West Vancouver neighborhoods by using a boxplot.
+
+```{r fig6-boxplot}
+# plot species richness by East and West side
+task2.3.1 %>%
+  ggplot(aes(location, species_richness)) +
+  geom_boxplot(aes(), fill = "darkgreen") +
+  theme_classic() +
+  ylab("Species richness") +
+  xlab("")
+```
+
+By the looks of it, species richness of planted trees is actually higher in East Vancouver neighborhoods. Now that we have this dataframe, we could use it for test if this relationship is actually significant in Task 3!
+
+To answer the other question, *Does planted tree community composition vary between East and West Vancouver neighborhoods?*, I will need a different version of the data. For this question, I can use a version of the data similar to the one I created in Task 1.2: relative abundance of each tree genus by neighborhood. Again, the only difference is that I will need to add the `location` column so that the data can be compared between the two groups.
+
+To save time, I will simply add the `location` column that I just created in this section Task 2.3 to the previous dataframe that I created back in Task 1.2. I can do this because the dimensions are the same (22 rows = 22 neighborhoods) and in both cases the neighborhoods are sorted alphabetically so the new `location` column can be added seamlessly.
+
+```{r}
+# view old dataframe from Task 1.2, Research Question 3
+print(task1.2.3.3)  # 22 rows alphabetically from ARBUTUS-RIDGE to WEST POINT GREY
+
+# view new dataframe for *new* research question from this Task 2.3
+print(task2.3.1)    # 22 rows alphabetically from ARBUTUS-RIDGE to WEST POINT GREY
+task2.3.1$location  # this column can be added to old dataframe
+
+# add the location column to the old dataframe to create the new dataframe I need
+task2.3.2 <- task1.2.3.3 %>%
+  tibble::add_column(location = task2.3.1$location) %>%   # add new location column
+  dplyr::relocate(location, .after = neighbourhood_name) %>%  
+  dplyr::select(-TOTAL)                                   # remove TOTAL column
+print(task2.3.2)
+```
+
+The above dataframe could now be used to answer my second new research question! The dataframe is now set up in the format used to run an NMDS or other ordination technique, for example. The two groups (East and West) could then be compared using a multivariate approach like MANOVA. IN addition, I will also make a tidy version of this dataset below:
+
+```{r}
+# use pivot_longer to create a tidy version of the dataframe
+task2.3.3 <- task2.3.2 %>%
+  tidyr::pivot_longer(
+    cols = ABIES:VIBURNUM, 
+    names_to = "genus", 
+    values_to = "proportion")
+head(task2.3.3)
+```
+
+The above versions of the data will be appropriate to answer my two research questions. I used a variety of functions to create them, including relocate, select, mutate, summarise, and group_by from the `dplyr` package and pivot_longer from the `tidyr` package. 
 
 <!----------------------------------------------------------------------------->
 
@@ -433,41 +556,9 @@ Pick a research question from 1.2, and pick a variable of interest (we'll call i
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: Does plant tree species richness vary between East and West Vancouver neighborhoods? 
+**Research Question**: Does planted tree species richness vary between East and West Vancouver neighborhoods?
 
-**Variable of interest**: Species richness 
-
-** MOVE THIS CHUNK UP TO WHERE IT ASKS FOR 4-8 FUNCTIONS TO MAKE DF**
-This question is a slight variation on my original Research Question 2: How does planted tree species richness vary by neighborhood? After visualizing species richness by neighborhood in Part 1.2, I would now like to test if species richness differs statistically between East and West Vancouver neighborhoods. 
-
-To start, I will be using a variation of the dataframe that I prepared in Part 1.2 to visualize Research Question 2, `task1.2.2`. In order to answer my new Research Question: *Does plant tree species richness vary between East and West Vancouver neighborhoods?*, I will need to add a new column to the dataframe. This column will contain character data labelled "East" or "West". I will create this column based off the existing `longitude` column. To do so, I will take the mean longitude value for each neighborhood, and use this to assign each neighborhood to a category of "East" or "West". This will be based on the Vancouver Main Street longitude coordinates of -123.100796. 
-
-```{r}
-# create the dataframe that I will use to run my model
-task3.0 <- vancouver_trees %>% 
-  dplyr::group_by(neighbourhood_name) %>% 
-  dplyr::summarise(species_richness = n_distinct(common_name),  # calculate spp. richness
-            mean_longitude = mean(longitude, na.rm = TRUE)) %>% # calculate avg longitude
-  dplyr::mutate(mean_longitude = mean_longitude*(-1)) %>%       # make value positive
-  dplyr::mutate(side = factor(case_when(mean_longitude < 123.100796 ~ "East",
-                                 mean_longitude > 123.100796 ~ "West"), 
-                         levels = c('East', 'West')))           # add East and West column
-head(task3.0)
-```
-
-Before running the model below, I would like to first visualize the species richness data by East and West Vancouver neighborhoods by using a boxplot. 
-
-```{r fig5-boxplot}
-# plot species richness by East and West side
-task3.0 %>%
-  ggplot(aes(side, species_richness)) +
-  geom_boxplot(aes(), fill = "darkgreen") +
-  theme_classic() +
-  ylab("Species richness") +
-  xlab("")
-```
-
-By the looks of it, species richness of planted trees is higher in East Vancouver neighhoorhoods. Next, I will run a model to find out if this difference is statistically significant. 
+**Variable of interest**: Species richness
 
 <!----------------------------------------------------------------------------->
 
@@ -483,15 +574,15 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 
 <!-------------------------- Start your work below ---------------------------->
 
-I will run a linear model to see how well the neighborhood side predicts the species richness of planted trees. 
+I will fit a linear model to see how well the location ID predicts the species richness of planted trees. The dataframe I am using is the first of the dataframes that I prepared above in Task 2.3. 
+
+Note that since I am comparing two groups, I could equally have used a t.test() to compare the means across the two groups. Here, I have instead chosen to fit a lm, which will do an equivalent job and also compare the two groups, only by setting "locationEast" as the control group for which to compare "locationWest". 
 
 ```{r}
-model1 <- lm(species_richness ~ side, data = task3.0)
+model1 <- lm(species_richness ~ location, data = task2.3.1)
+model1
 summary(model1)
-
 ```
-
-
 
 <!----------------------------------------------------------------------------->
 
@@ -505,21 +596,23 @@ Produce something relevant from your fitted model: either predictions on Y, or a
 
 <!-------------------------- Start your work below ---------------------------->
 
+I will produce a p-value from the above fitted model. This can be done using `broom::tidy` or `broom::glance`, and the specific value I am interested in can also be printed as seen below. 
+
 ```{r}
-# Use broom::tidy to tibble from model output
-task3.2 <- broom::tidy(model1)
-print(task3.2)               # see the full output
+# use broom::tidy to see p.value = 3.006993e-01
+task3.2.1 <- broom::tidy(model1)
+print(task3.2.1)
+          
+# alternatively, use broom::glance to see p-value = 0.3006993
+task3.2.2 <- broom::glance(model1)
+print(task3.2.2)
 
-# Alternatively, use broom::glance 
-broom::glance(model1)
-
-# Print just the value I am interested in (p-value)
-pvalue <- task3.2[2, 5]
+# or, print just the value I am interested in (p-value) = 0.3006993	
+pvalue <- task3.2.1[2, 5]
 pvalue
 ```
 
-
-
+The p-value from the above model is 0.3, indicating that neighborhood location is *not* a good predictor of species richness. While there did appear to be some difference in species richness between the East and West locations in the boxplot above, this difference is not significant. This is unsurprising given that the boxplot showed the interquartile ranges are largely overlapping one another. 
 
 <!----------------------------------------------------------------------------->
 
@@ -540,7 +633,6 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 
 
 
-
 <!----------------------------------------------------------------------------->
 
 ## 4.2 (3 points)
@@ -550,8 +642,6 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 -   The same robustness and reproducibility criteria as in 4.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
-
-
 
 <!----------------------------------------------------------------------------->
 
