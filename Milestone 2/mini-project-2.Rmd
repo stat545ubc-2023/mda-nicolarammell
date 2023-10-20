@@ -51,6 +51,7 @@ library(tidyverse)  # will load ggplot2, dplyr!
 library(tidyr)      # for tidying data
 library(forcats)    # for reordering factors 
 library(broom)      # for model output objects to tibbles
+library(here)       # find files relative to project root
 ```
 
 # Task 1: Process and summarize your data
@@ -179,9 +180,9 @@ task1.2.2 %>%
 
 #### Research Question 3: Does tree community composition differ by neighborhood?
 
-**Summarizing:** I will complete Option 4, computing the proportion and counts in each category of one categorical variable across group of another categorical variable. This helps answer the RQ because I will compute the *proportion* that each tree genera makes up in each neighborhood. This will provide a first look into the overall community composition by neighborhood, as guided directly by the research question!
+**Summarizing:** I will complete Option 4, computing the proportion and counts in each category of one categorical variable across group of another categorical variable. This helps answer the RQ because I will compute the counts and proportion that each tree genera makes up in each neighborhood. This will provide a first look into the overall community composition by neighborhood, as guided directly by the research question!
 
-Note: This exercise will first pivot data into the "wide" format, which is not considered tidy data. However, it is generally the standard format to view species composition data, so I will use the `pivot_wider` function, being aware of the limitations of this format. Next, I will use the `pivot_longer` function to create a "tidy" version of the dataframe, as well!
+**Note:** This exercise will first pivot data into the "wide" format, which is not considered tidy data. However, it is generally the standard format to view species composition data, so I will use the `pivot_wider` function, being aware of the limitations of this format. Next, I will use the `pivot_longer` function to create a "tidy" version of the dataframe, as well!
 
 ```{r}
 # compute genera counts by neighborhood using pivot_wider
@@ -257,7 +258,7 @@ task1.2.3.2 %>%
 
 For clarity, the legend has been removed from the above plot, since we are not necessarily interested in seeing the identity of all genera per se. Instead, we may be interested in viewing how many *Acer* trees are planted relative to the other genera in each of the neighborhoods. If this is of interest, we could make a plot like the one above that shows the counts for the *Acer* genus to help answer the research question. The above plot shows both the total number of trees planted in each neighborhood, as well as the contribution made by each genus.
 
-However, to answer the question of how community composition differs between the neighborhoods, we may also wish to see a plot based directly on *relative* abundances as seen below. For clarity, the legend has again been removed from the plot.
+However, to answer the question of how community composition differs between the neighborhoods, we may also wish to see a plot based directly on *relative* abundances as seen below.
 
 ```{r fig4-barplot-layered}
 # barplot with tree proportions by genus vs. neighborhood 
@@ -276,7 +277,7 @@ For clarity, the legend has again been removed from the above plot. Abundant gen
 
 #### Research Question 4: Have the species identity of planted trees changed over time?
 
-**Summarizing:** I will complete Option 3, creating a categorical variable (with 3 or more groups) from the "numerical" (please see the Note above on line 103) `year` variable. This helps answer the RQ because we may be interested in how the species identify of planted trees has changed by comparing one decade to the next, instead of year by year. Therefore, I will calculate a new variable called `decade` with the categories of "1980s", 1990s", "2000s", and "2010s".
+**Summarizing:** I will complete Option 3, creating a categorical variable (with 3 or more groups) from the "numerical" `year` variable (please see the Note above on line 103). This helps answer the RQ because we may be interested in how the species identify of planted trees has changed by averaging across decades, instead of year by year. Therefore, I will calculate a new variable called `decade` with the categories of "1980s", 1990s", "2000s", and "2010s".
 
 ```{r}
 # create year_planted variable from date_planted variable for this exercise
@@ -300,10 +301,11 @@ task1.2.4.1 <- task1.2.4.0  %>%
                             year_planted < 2000 ~ "1990s",
                             year_planted < 2010 ~ "2000s", 
                             year_planted < 2020 ~ "2010s"), 
-                         levels = c('1980s', '1990s', '2000s', '2010s')))
+                            levels = c('1980s', '1990s', '2000s', '2010s'))) %>%
+  dplyr::relocate(decade, .after = civic_number)  # relocate so visible in print
 View(task1.2.4.1)              # confirm values all look correct in new window
 # dplyr::glimpse(task1.2.4.1)  # note `decade` is factor with 4 levels
-head(task1.2.4.1)  
+print(task1.2.4.1)  
 ```
 
 **Graphing:** I will complete Option 7, making a graph where it makes sense to customize the alpha transparency. Here, I will graph the number of trees by species (for a specific genus of interest) planted over time. Therefore, I will also be using a one of the new variables I created in the summarizing task above: `year_planted`. For this graph, it makes sense to customize the alpha transparency simply because there are many overlapping lines, and I would like them all to be visible. Without the transparency feature, some lines would be completely overridden by others!
@@ -326,7 +328,7 @@ task1.2.4.2 %>%
   filter(genus_name == "FRAXINUS") %>% 
   ggplot(aes(year_planted, n)) +
   geom_line(aes(colour = common_name), alpha = 0.5) +  # adds transparency
-  ylab("Number of trees planted") +
+  ylab("Number of trees") +
   xlab("Year") +
   scale_colour_discrete("") +
   theme_classic() +
@@ -341,19 +343,19 @@ The above plot suggests that yes, the identity of planted Ash trees did change o
 
 ### 1.3 (2 points)
 
-Based on the operations that you've completed, how much closer are you to answering your research questions? Think about what aspects of your research questions remain unclear. Can your research questions be refined, now that you've investigated your data a bit more? Which research questions are yielding interesting results?
+**Based on the operations that you've completed, how much closer are you to answering your research questions? Think about what aspects of your research questions remain unclear. Can your research questions be refined, now that you've investigated your data a bit more? Which research questions are yielding interesting results?**
 
 <!------------------------- Write your answer here ---------------------------->
 
-Based on the 8 operations completed, I have made progress in answering each of my research questions.
+Based on the 8 operations I completed, I have made progress in answering each of my research questions.
 
 For RQ1, *What are the common and rare tree genera and species planted in Vancouver, BC?*, I was able to quickly view the answers in the form of summary tables. I was also able to produce a plot that showed the frequency of planted genera from most common to most rare.
 
 For RQ2, *How does tree species richness vary by neighborhood?*, I was also able to produce a plot that demonstrated the species richness in each neighborhood. Similarly, for RQ3, *Does tree community (taxonomic) composition differ by neighborhood?*, I produced plots that showed the total (counts) and relative abundance (proportion) of the different genera planted in the different neighborhoods. These were useful exploratory visualizations; however, these operations did not actually answer the questions with any kind of statistical test. I am still unclear on these two research questions.
 
-Lastly, for RQ4, *Have the species identity of planted trees changed over time?*, I was able to delve into this question for one genus of interest and show that likely, yes, the species identity of planted Ash trees did actually change over time. This was an interesting observation, however, again this question was not answered with any certainty since there was no statistical test involved and this was only done for one particular genus of interest.
+Lastly, for RQ4, *Have the species identity of planted trees changed over time?*, I was able to investigate into this question for one genus of interest where likely, yes, the species identity of planted Ash trees did actually change over time. This was an interesting observation, however, again this question was not answered with any certainty since there was no statistical test involved and this was only done for one particular genus of interest.
 
-Overall, I am interested in looking more into the questions regarding how species richness and community composition differ by neighborhood, since these questions still remain the most unclear. Specifically, I would like to refine the research question to ask about the difference between East and West Vancouver neighborhoods, so that the dataset can provide multiple samples per category.
+Overall, I am interested in looking more into the questions regarding how species richness and community composition differ by neighborhood, since these questions still remain the most unclear. Specifically, I would like to refine the research question to ask about the difference between East and West Vancouver neighborhoods, so that I have multiple samples per category.
 
 <!----------------------------------------------------------------------------->
 
@@ -369,7 +371,7 @@ A reminder of the definition of *tidy* data:
 
 ### 2.1 (2 points)
 
-Based on the definition above, can you identify if your data is tidy or untidy? Go through all your columns, or if you have \>8 variables, just pick 8, and explain whether the data is untidy or tidy.
+**Based on the definition above, can you identify if your data is tidy or untidy? Go through all your columns, or if you have \>8 variables, just pick 8, and explain whether the data is untidy or tidy.**
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -391,11 +393,11 @@ Tidying of the data could be improved by separating the `date_planted` column in
 
 ### 2.2 (4 points)
 
-Now, if your data is tidy, untidy it! Then, tidy it back to it's original state.
+**Now, if your data is tidy, untidy it! Then, tidy it back to it's original state.**
 
-If your data is untidy, then tidy it! Then, untidy it back to it's original state.
+**If your data is untidy, then tidy it! Then, untidy it back to it's original state.**
 
-Be sure to explain your reasoning for this task. Show us the "before" and "after".
+**Be sure to explain your reasoning for this task. Show us the "before" and "after".**
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -412,13 +414,15 @@ So, I will create an untidy dataframe below. To do this, I will put `latitude` a
 ```{r}
 # create df with latitude + longitude together in 1 column, separated by ", "
 task2.2.0 <- vancouver_trees %>% 
-  tidyr::unite(coordinates, latitude,longitude, sep = ", ")
+  tidyr::unite(coordinates, latitude,longitude, sep = ", ") %>%
+  dplyr::relocate(coordinates, .after = tree_id) # relocate so visible in print 
 View(task2.2.0)    # see coordinates are now in the form: 49.217759, -123.114718
 head(task2.2.0)  
 
 # next, create df with genus + species together in 1 column, separated by " "
 task2.2.1 <- task2.2.0 %>% 
-  tidyr::unite(scientific_name, genus_name,species_name, sep = " ")
+  tidyr::unite(scientific_name, genus_name,species_name, sep = " ") %>%
+  dplyr::relocate(scientific_name, .after = coordinates) # relocate so visible in print 
 View(task2.2.1)  # see names are now in the form: SORBUS ARIA
 head(task2.2.1)
 ```
@@ -430,7 +434,6 @@ Next, I will tidy the now untidy dataframe below.
 ```{r}
 # see the untidy dataframe
 head(task2.2.1)
-tail(task2.2.1)
 
 # now, tidy the dataframe!
 task2.2.2 <- task2.2.1 %>% 
@@ -444,26 +447,26 @@ task2.2.2 <- task2.2.1 %>%
                 day_planted = lubridate::day(date_planted)) %>%   # create day column
   dplyr::select(-date_planted)
 head(task2.2.2)
-tail(task2.2.2)
 ```
 
-As seen in the dataframe above, `genus`, `species`, `latitude`, and `longitude` data have all been returned to their own separate columns. Separating and re-uniting the genus and species data actually improved the "tidyness" of the dataset, because in the original dataset there were "Xs" in some of the cells along with the genus or species name. These "X" probably come from crossing cultivar strains that should have been in the cultivar column. By retaining only genus and species, I have tidyied up the scientific name columns. Additionally, I separated the date column into `date_planted`, `month_planted`, and `day_planted` so that each cell contains only one piece of information. The dataframe is now tidy!
+As seen in the dataframe above, `genus`, `species`, `latitude`, and `longitude` data have all been returned to their own separate columns. Separating and re-uniting the genus and species data actually improved the "tidyness" of the dataset, because in the original dataset there were "Xs" in some of the cells along with the genus or species name. These "Xs" probably come from crossing cultivar strains that should have been in the cultivar column. By retaining only genus and species, I have tidyied up the scientific name columns. Additionally, I separated the date column into `date_planted`, `month_planted`, and `day_planted` so that each cell contains only one piece of information. The dataframe is now tidy!
 
 <!----------------------------------------------------------------------------->
 
 ### 2.3 (4 points)
 
-Now, you should be more familiar with your data, and also have made progress in answering your research questions. Based on your interest, and your analyses, pick 2 of the 4 research questions to continue your analysis in the remaining tasks:
+**Now, you should be more familiar with your data, and also have made progress in answering your research questions. Based on your interest, and your analyses, pick 2 of the 4 research questions to continue your analysis in the remaining tasks:**
 
 <!-------------------------- Start your work below ---------------------------->
 
 Based on my explanations in Task 1.3, I am slightly revising my research questions. The research questions that I am now most intersted in answering are:
 
-**1.** Does planted tree species richness vary between East and West Vancouver neighborhoods? **2.** Does planted tree community composition differ between East and West Vancouver neighborhoods?
+**1.** Does planted tree species richness vary between East and West Vancouver neighborhoods?  
+**2.** Does planted tree community composition differ between East and West Vancouver neighborhoods?
 
 <!----------------------------------------------------------------------------->
 
-Explain your decision for choosing the above two research questions.
+**Explain your decision for choosing the above two research questions.**
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -477,9 +480,9 @@ I am interested in exploring these research questions further because it was dif
 
 <!----------------------------------------------------------------------------->
 
-Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidying, dropping irrelevant columns, etc.).
+**Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidying, dropping irrelevant columns, etc.).**
 
-(If it makes more sense, then you can make/pick two versions of your data, one for each research question.)
+**(If it makes more sense, then you can make/pick two versions of your data, one for each research question.)**
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -494,7 +497,7 @@ task2.3.1 <- vancouver_trees %>%
   dplyr::mutate(mean_longitude = mean_longitude*(-1)) %>%       # make value positive
   dplyr::mutate(location = factor(case_when(mean_longitude < 123.100796 ~ "East",
                                  mean_longitude > 123.100796 ~ "West"), 
-                                 levels = c('East', 'West')))   # add East and West column
+                                 levels = c('East', 'West')))   # add location column
 print(task2.3.1)
 ```
 
@@ -514,7 +517,7 @@ By the looks of it, species richness of planted trees is actually higher in East
 
 To answer the other question, *Does planted tree community composition vary between East and West Vancouver neighborhoods?*, I will need a different version of the data. For this question, I can use a version of the data similar to the one I created in Task 1.2: relative abundance of each tree genus by neighborhood. Again, the only difference is that I will need to add the `location` column so that the data can be compared between the two groups.
 
-To save time, I will simply add the `location` column that I just created in this section Task 2.3 to the previous dataframe that I created back in Task 1.2. I can do this because the dimensions are the same (22 rows = 22 neighborhoods) and in both cases the neighborhoods are sorted alphabetically so the new `location` column can be added seamlessly.
+To save time, I will simply add the `location` column (that I just created in this section Task 2.3) to the previous dataframe that I created back in Task 1.2. I can do this because the dimensions are the same (22 rows = 22 neighborhoods) and in both cases the neighborhoods are sorted alphabetically, so the new `location` column can be added seamlessly.
 
 ```{r}
 # view old dataframe from Task 1.2, Research Question 3
@@ -522,9 +525,8 @@ print(task1.2.3.3)  # 22 rows alphabetically from ARBUTUS-RIDGE to WEST POINT GR
 
 # view new dataframe for *new* research question from this Task 2.3
 print(task2.3.1)    # 22 rows alphabetically from ARBUTUS-RIDGE to WEST POINT GREY
-task2.3.1$location  # this column can be added to old dataframe
 
-# add the location column to the old dataframe to create the new dataframe I need
+# add location column to the old dataframe to create the new dataframe I need
 task2.3.2 <- task1.2.3.3 %>%
   tibble::add_column(location = task2.3.1$location) %>%   # add new location column
   dplyr::relocate(location, .after = neighbourhood_name) %>%  
@@ -532,7 +534,7 @@ task2.3.2 <- task1.2.3.3 %>%
 print(task2.3.2)
 ```
 
-The above dataframe could now be used to answer my second new research question! The dataframe is now set up in the format used to run an NMDS or other ordination technique, for example. The two groups (East and West) could then be compared using a multivariate approach like MANOVA. IN addition, I will also make a tidy version of this dataset below:
+The above dataframe could now be used to answer my second new research question! The dataframe is now set up in the format used to run an NMDS or other ordination technique, for example. The groups (East and West) could then be compared using a multivariate approach like MANOVA. In addition, I will also make a tidy version of this dataset below:
 
 ```{r}
 # use pivot_longer to create a tidy version of the dataframe
@@ -552,7 +554,7 @@ The above versions of the data will be appropriate to answer my two research que
 
 ## 3.0 (no points)
 
-Pick a research question from 1.2, and pick a variable of interest (we'll call it "Y") that's relevant to the research question. Indicate these.
+**Pick a research question from 1.2, and pick a variable of interest (we'll call it "Y") that's relevant to the research question. Indicate these.**
 
 <!-------------------------- Start your work below ---------------------------->
 
@@ -564,7 +566,7 @@ Pick a research question from 1.2, and pick a variable of interest (we'll call i
 
 ## 3.1 (3 points)
 
-Fit a model or run a hypothesis test that provides insight on this variable with respect to the research question. Store the model object as a variable, and print its output to screen. We'll omit having to justify your choice, because we don't expect you to know about model specifics in STAT 545.
+**Fit a model or run a hypothesis test that provides insight on this variable with respect to the research question. Store the model object as a variable, and print its output to screen. We'll omit having to justify your choice, because we don't expect you to know about model specifics in STAT 545.**
 
 -   **Note**: It's OK if you don't know how these models/tests work. Here are some examples of things you can do here, but the sky's the limit.
 
@@ -574,7 +576,7 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 
 <!-------------------------- Start your work below ---------------------------->
 
-I will fit a linear model to see how well the location ID predicts the species richness of planted trees. The dataframe I am using is the first of the dataframes that I prepared above in Task 2.3. 
+I will fit a linear model to see how well the `location` predicts the `species_richness` of planted trees. The dataframe I am using is the first of the dataframes that I prepared above in Task 2.3. 
 
 Note that since I am comparing two groups, I could equally have used a t.test() to compare the means across the two groups. Here, I have instead chosen to fit a lm, which will do an equivalent job and also compare the two groups, only by setting "locationEast" as the control group for which to compare "locationWest". 
 
@@ -588,7 +590,7 @@ summary(model1)
 
 ## 3.2 (3 points)
 
-Produce something relevant from your fitted model: either predictions on Y, or a single value like a regression coefficient or a p-value.
+**Produce something relevant from your fitted model: either predictions on Y, or a single value like a regression coefficient or a p-value.**
 
 -   Be sure to indicate in writing what you chose to produce.
 -   Your code should either output a tibble (in which case you should indicate the column that contains the thing you're looking for), or the thing you're looking for itself.
@@ -618,7 +620,7 @@ The p-value from the above model is 0.3, indicating that neighborhood location i
 
 # Task 4: Reading and writing data
 
-Get set up for this exercise by making a folder called `output` in the top level of your project folder / repository. You'll be saving things there.
+**Get set up for this exercise by making a folder called `output` in the top level of your project folder / repository. You'll be saving things there.**
 
 ## 4.1 (3 points)
 
@@ -629,9 +631,17 @@ Take a summary table that you made from Task 1, and write it as a csv file in yo
 
 <!-------------------------- Start your work below ---------------------------->
 
+The summary table that I made in Task 1 that I will used is called `task1.2.2`. This is a relevant table because it contains species richness data, which is ultimately the variable of interest that I ended up modelling. I will write it to a csv file in the `output` folder below:
 
+```{r}
+# see the task1.2.2 summary table I would like to output
+head(task1.2.2)
 
+# write df to the file
+write.csv(task1.2.2, file = here::here("output","species_richness.csv"), row.names=FALSE)
+```
 
+Running the above code generates a csv file, "species_richness.csv", in the `output` folder of this project directory. 
 
 <!----------------------------------------------------------------------------->
 
@@ -642,6 +652,18 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 -   The same robustness and reproducibility criteria as in 4.1 apply here.
 
 <!-------------------------- Start your work below ---------------------------->
+
+```{r}
+# see the model1 object I would like to save
+model1
+
+# save as RDS in output folder
+saveRDS(model1, file = here::here("output","model1.rds"))
+
+# load it again, under a different name
+model2 <- readRDS(file = here::here("output","model1.rds"))
+model2
+```
 
 <!----------------------------------------------------------------------------->
 
